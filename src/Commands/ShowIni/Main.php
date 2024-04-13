@@ -1,11 +1,11 @@
 <?php
 
-namespace Ephect\Commands\Ini;
+namespace Bolero\Commands\Ini;
 
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
-use Ephect\Framework\Registry\StateRegistry;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Registry\StateRegistry;
 
 #[CommandDeclaration(verb: "show", subject: "ini")]
 #[CommandDeclaration(desc: "Display the ini file if exists")]

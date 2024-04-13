@@ -85,7 +85,7 @@ final class UseSlotParser extends AbstractTokenParser
         $decl2 = "";
 
         $useEffect = <<< USEFFECT
-        \Ephect\Hooks\useEffect(function() use ($match1) { $match2 });
+        \Bolero\Hooks\useEffect(function() use ($match1) { $match2 });
         USEFFECT;
 
         $this->result = [

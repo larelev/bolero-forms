@@ -1,16 +1,16 @@
 <?php
 
-namespace Ephect\Commands\MakeSkeleton;
+namespace Bolero\Commands\MakeSkeleton;
 
-use Ephect\Framework\Commands\AbstractCommandLib;
-use Ephect\Framework\IO\Utils;
+use Bolero\Forms\Commands\AbstractCommandLib;
+use Bolero\Forms\IO\Utils;
 
 class Lib extends AbstractCommandLib
 {
 
     public function makeSkeleton(): void
     {
-        $sample = EPHECT_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Skeleton';
+        $sample = BOLERO_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Skeleton';
 
         Utils::safeMkDir(SRC_ROOT);
         $destDir = realpath(SRC_ROOT);

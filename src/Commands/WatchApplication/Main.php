@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Commands\WatchApplication;
+namespace Bolero\Commands\WatchApplication;
 
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "watch")]
 #[CommandDeclaration(desc: "Watch the application.")]

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ephect\Hooks;
+namespace Bolero\Hooks;
 
-use Ephect\Framework\Registry\StateRegistry;
+use Bolero\Forms\Registry\StateRegistry;
 
 function useState(array|object $state = null): array
 {

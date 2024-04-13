@@ -1,11 +1,11 @@
 <?php
 
-namespace Ephect\Commands\ShowConnections;
+namespace Bolero\Commands\ShowConnections;
 
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
-use Ephect\Framework\Registry\StateRegistry;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Registry\StateRegistry;
 
 #[CommandDeclaration(verb: "show", subject: "connections")]
 #[CommandDeclaration(desc: "Display the data connections registered.")]

@@ -1,11 +1,11 @@
 <?php
 
-namespace Ephect\Commands\RequireMaster;
+namespace Bolero\Commands\RequireMaster;
 
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\Commands\AbstractCommandLib;
-use Ephect\Framework\IO\Utils;
-use Ephect\Framework\Web\Curl;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\Commands\AbstractCommandLib;
+use Bolero\Forms\IO\Utils;
+use Bolero\Forms\Web\Curl;
 
 class Lib extends AbstractCommandLib
 {
@@ -23,30 +23,30 @@ class Lib extends AbstractCommandLib
 
         $master = $libRoot . 'main';
         $filename = $master . '.zip';
-        $ephectDir = $master . DIRECTORY_SEPARATOR . 'framework-main' . DIRECTORY_SEPARATOR . 'Ephect' . DIRECTORY_SEPARATOR . 'Framework' . DIRECTORY_SEPARATOR;
+        $boleroDir = $master . DIRECTORY_SEPARATOR . 'framework-main' . DIRECTORY_SEPARATOR . 'Bolero' . DIRECTORY_SEPARATOR . 'Framework' . DIRECTORY_SEPARATOR;
 
         $tree = [];
 
         if (!file_exists($filename)) {
-            Console::writeLine('Downloading ephect github main');
+            Console::writeLine('Downloading bolero github main');
             $curl = new Curl();
-            [$code, $header, $content] = $curl->request('https://codeload.github.com/ephect-io/framework/zip/main');
+            [$code, $header, $content] = $curl->request('https://codeload.github.com/bolero-io/framework/zip/main');
 
             file_put_contents($filename, $content);
         }
 
         if (file_exists($filename)) {
-            Console::writeLine('Inflating ephect master archive');
+            Console::writeLine('Inflating bolero master archive');
             $zip = new Zip();
             $zip->inflate($filename);
         }
 
         if (file_exists($filename)) {
-            $tree = Utils::walkTreeFiltered($ephectDir, ['php']);
+            $tree = Utils::walkTreeFiltered($boleroDir, ['php']);
         }
 
         unlink($filename);
-        $result = ['path' => $ephectDir, 'tree' => $tree];
+        $result = ['path' => $boleroDir, 'tree' => $tree];
 
         return (object) $result;
     }

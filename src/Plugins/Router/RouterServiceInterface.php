@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Plugins\Router;
+namespace Bolero\Plugins\Router;
 
-use Ephect\Plugins\Route\RouteEntity;
-use Ephect\Plugins\Route\RouteInterface;
+use Bolero\Plugins\Route\RouteEntity;
+use Bolero\Plugins\Route\RouteInterface;
 
 interface RouterServiceInterface
 {

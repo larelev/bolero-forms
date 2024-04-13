@@ -1,8 +1,8 @@
 <?php
 
-namespace Ephect\Plugins\WebComponent;
+namespace Bolero\Plugins\WebComponent;
 
-use Ephect\Framework\WebComponents\ManifestEntity;
+use Bolero\Forms\WebComponents\ManifestEntity;
 
 interface WebComponentServiceInterface
 {

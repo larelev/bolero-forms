@@ -1,10 +1,10 @@
 <?php
 
-namespace Ephect\Commands\Build;
+namespace Bolero\Commands\Build;
 
-use Ephect\Framework\Commands\AbstractCommandLib;
-use Ephect\Framework\Core\Builder;
-use Ephect\Framework\IO\Utils;
+use Bolero\Forms\Commands\AbstractCommandLib;
+use Bolero\Forms\Core\Builder;
+use Bolero\Forms\IO\Utils;
 
 class Lib extends AbstractCommandLib
 {

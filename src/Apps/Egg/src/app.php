@@ -1,8 +1,8 @@
 <?php
 
-namespace Ephect\Apps\Egg;
+namespace Bolero\Apps\Egg;
 
-use Ephect\Framework\CLI\Application;
+use Bolero\Forms\CLI\Application;
 
 include 'includes.php';
 

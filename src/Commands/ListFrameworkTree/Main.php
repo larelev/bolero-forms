@@ -1,20 +1,20 @@
 <?php
 
-namespace Ephect\Commands\FrameworkTree;
+namespace Bolero\Commands\FrameworkTree;
 
-use Ephect\Commands\CommonLib;
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Commands\CommonLib;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "list", subject: "framework")]
-#[CommandDeclaration(desc: "Display the tree of the Ephect framework.")]
+#[CommandDeclaration(desc: "Display the tree of the Bolero framework.")]
 class Main extends AbstractCommand
 {
     public function run(): void
     {
-        Console::writeLine(EPHECT_ROOT);
+        Console::writeLine(BOLERO_ROOT);
         $egg = new CommonLib($this->application);
-        $egg->displayTree(EPHECT_ROOT);
+        $egg->displayTree(BOLERO_ROOT);
     }
 }

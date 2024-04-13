@@ -66,7 +66,7 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
 
         if ($asArray) {
             $result = TextUtils::jsonToPhpArray($result);
-            $result = str_replace('"' . EPHECT_ROOT, 'EPHECT_ROOT . "', $result);
+            $result = str_replace('"' . BOLERO_ROOT, 'BOLERO_ROOT . "', $result);
             $result = str_replace('"' . SRC_ROOT, 'SRC_ROOT . "', $result);
         }
 

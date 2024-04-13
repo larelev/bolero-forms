@@ -1,13 +1,13 @@
 <?php
 
-namespace Ephect\Commands\Serve;
+namespace Bolero\Commands\Serve;
 
-use Ephect\Commands\CommonLib;
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\CLI\ConsoleColors;
-use Ephect\Framework\CLI\System\Command;
-use Ephect\Framework\Commands\AbstractCommandLib;
-use Ephect\Framework\IO\Utils;
+use Bolero\Commands\CommonLib;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\CLI\ConsoleColors;
+use Bolero\Forms\CLI\System\Command;
+use Bolero\Forms\Commands\AbstractCommandLib;
+use Bolero\Forms\IO\Utils;
 
 class Lib extends AbstractCommandLib
 {

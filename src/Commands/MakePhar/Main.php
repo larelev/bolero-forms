@@ -1,10 +1,10 @@
 <?php
 
-namespace Ephect\Commands\MakePhar;
+namespace Bolero\Commands\MakePhar;
 
-use Ephect\Apps\Egg\PharLib;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Apps\Egg\PharLib;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "make", subject: "phar")]
 #[CommandDeclaration(desc: "Make a phar archive of the current application with files in vendor directory.")]

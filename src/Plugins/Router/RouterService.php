@@ -1,16 +1,16 @@
 <?php
 
-namespace Ephect\Plugins\Router;
+namespace Bolero\Plugins\Router;
 
-use Ephect\Framework\Components\Component;
-use Ephect\Framework\IO\Utils;
-use Ephect\Plugins\Route\RouteEntity;
-use Ephect\Plugins\Route\RouteInterface;
-use Ephect\Framework\Registry\ComponentRegistry;
-use Ephect\Framework\Registry\HttpErrorRegistry;
-use Ephect\Framework\Registry\RouteRegistry;
+use Bolero\Forms\Components\Component;
+use Bolero\Forms\IO\Utils;
+use Bolero\Plugins\Route\RouteEntity;
+use Bolero\Plugins\Route\RouteInterface;
+use Bolero\Forms\Registry\ComponentRegistry;
+use Bolero\Forms\Registry\HttpErrorRegistry;
+use Bolero\Forms\Registry\RouteRegistry;
 
-use function Ephect\Hooks\useState;
+use function Bolero\Hooks\useState;
 
 class RouterService implements RouterServiceInterface
 {

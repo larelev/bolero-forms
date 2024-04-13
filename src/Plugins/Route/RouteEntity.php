@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Plugins\Route;
+namespace Bolero\Plugins\Route;
 
-use Ephect\Framework\Element;
-use Ephect\Framework\ElementTrait;
+use Bolero\Forms\Element;
+use Bolero\Forms\ElementTrait;
 
 class RouteEntity extends Element implements RouteInterface
 {

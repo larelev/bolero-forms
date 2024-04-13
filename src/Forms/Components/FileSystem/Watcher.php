@@ -6,7 +6,7 @@ namespace Bolero\Forms\Components\FileSystem;
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\IO\Utils;
 
-use function Ephect\Hooks\useInterval;
+use function Bolero\Hooks\useInterval;
 
 class Watcher 
 {

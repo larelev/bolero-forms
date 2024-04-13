@@ -1,10 +1,10 @@
 <?php
 
-namespace Ephect\Commands\ApplicationTree;
+namespace Bolero\Commands\ApplicationTree;
 
-use Ephect\Commands\CommonLib;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "show", subject: "tree")]
 #[CommandDeclaration(desc: "Display the tree of the current application.")]

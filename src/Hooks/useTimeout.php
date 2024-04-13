@@ -1,6 +1,6 @@
 <?php
 
-namespace Ephect\Hooks;
+namespace Bolero\Hooks;
 
 function useTimeout($callback, $ms)
 {

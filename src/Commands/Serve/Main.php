@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Commands\Serve;
+namespace Bolero\Commands\Serve;
 
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "serve")]
 #[CommandDeclaration(desc: "Launch PHP embedded server on available port starting from the one in config.")]

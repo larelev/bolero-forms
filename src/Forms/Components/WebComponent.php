@@ -20,7 +20,7 @@ class WebComponent extends AbstractFileComponent
 
         namespace $namespace;
 
-        use function Ephect\Hooks\useEffect;
+        use function Bolero\Hooks\useEffect;
 
         function $function(\$slot) {
     

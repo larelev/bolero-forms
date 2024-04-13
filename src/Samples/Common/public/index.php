@@ -1,4 +1,4 @@
 <?php
 include '../bootstrap.php';
 
-Ephect\Framework\Web\Application::create();
+Bolero\Forms\Web\Application::create();

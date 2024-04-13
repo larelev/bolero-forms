@@ -17,18 +17,18 @@ if (IS_WEB_APP) {
 
     define('CONFIG_DIR', SITE_ROOT . 'config' . DIRECTORY_SEPARATOR);
 
-    define('EPHECT_CONFIG', trim(file_get_contents(CONFIG_DIR . 'framework')));
+    define('BOLERO_CONFIG', trim(file_get_contents(CONFIG_DIR . 'framework')));
     define('AJIL_CONFIG', trim(file_get_contents(CONFIG_DIR . 'javascripts')));
-    define('EPHECT_ROOT', SITE_ROOT . EPHECT_CONFIG . DIRECTORY_SEPARATOR);
+    define('BOLERO_ROOT', SITE_ROOT . BOLERO_CONFIG . DIRECTORY_SEPARATOR);
     define('AJIL_ROOT', SITE_ROOT . AJIL_CONFIG . DIRECTORY_SEPARATOR);
 
     $appname = pathinfo(SITE_ROOT, PATHINFO_FILENAME);
     define('APP_NAME', $appname);
 
     define('AJIL_VENDOR_SRC', AJIL_ROOT);
-    define('EPHECT_VENDOR_SRC', EPHECT_ROOT);
-    define('EPHECT_VENDOR_LIB', EPHECT_VENDOR_SRC . 'Framework' . DIRECTORY_SEPARATOR);
-    define('EPHECT_VENDOR_APPS', EPHECT_VENDOR_SRC . 'Apps' . DIRECTORY_SEPARATOR);
+    define('BOLERO_VENDOR_SRC', BOLERO_ROOT);
+    define('BOLERO_VENDOR_LIB', BOLERO_VENDOR_SRC . 'Framework' . DIRECTORY_SEPARATOR);
+    define('BOLERO_VENDOR_APPS', BOLERO_VENDOR_SRC . 'Apps' . DIRECTORY_SEPARATOR);
 
     $rewrite_base = '/';
 
@@ -94,7 +94,7 @@ if (!IS_WEB_APP) {
 
     define('APP_CWD', IS_PHAR_APP ? getcwd() . DIRECTORY_SEPARATOR : str_replace($script_name, '', $app_path));
 
-    define('IS_INNER_APP', false !== strpos(APP_CWD, 'Framework' . DIRECTORY_SEPARATOR . 'Ephect' . DIRECTORY_SEPARATOR . 'Apps'));
+    define('IS_INNER_APP', false !== strpos(APP_CWD, 'Framework' . DIRECTORY_SEPARATOR . 'Bolero' . DIRECTORY_SEPARATOR . 'Apps'));
     define('IS_TASK_APP', false !== strpos(APP_CWD . $script_name, $script_dir . DIRECTORY_SEPARATOR . 'bootstrap.php'));
     define('IS_BIN_APP', false !== strpos(APP_CWD . $script_name, 'bin' . DIRECTORY_SEPARATOR . $script_name));
 
@@ -123,49 +123,49 @@ if (!IS_WEB_APP) {
     define('SITE_ROOT', dirname(SRC_ROOT) . DIRECTORY_SEPARATOR);
     
     define('CONFIG_DIR', SITE_ROOT . 'config' . DIRECTORY_SEPARATOR);
-    define('EPHECT', trim(file_get_contents(CONFIG_DIR . 'framework')));
-    define('EPHECT_ROOT', SITE_ROOT .  EPHECT . DIRECTORY_SEPARATOR);
+    define('BOLERO', trim(file_get_contents(CONFIG_DIR . 'framework')));
+    define('BOLERO_ROOT', SITE_ROOT .  BOLERO . DIRECTORY_SEPARATOR);
 
-    $vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'ephect-io' . DIRECTORY_SEPARATOR;
+    $vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'bolero-io' . DIRECTORY_SEPARATOR;
     $portable_dir = 'Epehct' . DIRECTORY_SEPARATOR;
     $bootstrap = 'bootstrap.php';
 
-    $ephect_dir = $vendor_dir . 'framework' . DIRECTORY_SEPARATOR . 'Ephect' . DIRECTORY_SEPARATOR;
+    $bolero_dir = $vendor_dir . 'framework' . DIRECTORY_SEPARATOR . 'Bolero' . DIRECTORY_SEPARATOR;
     $ajil_dir = $vendor_dir . 'javascripts' . DIRECTORY_SEPARATOR . 'Ajil' . DIRECTORY_SEPARATOR;
-    $ephect_vendor_lib = '';
-    $ephect_vendor_apps = '';
+    $bolero_vendor_lib = '';
+    $bolero_vendor_apps = '';
 
     define('APP_NAME', $appName);
 
-    $ephect_root = \Phar::running();
+    $bolero_root = \Phar::running();
 
     if (!IS_PHAR_APP) {
 
         if (IS_INNER_APP) {
             if (file_exists(SITE_ROOT . $portable_dir . $bootstrap)) {
-                $ephect_dir = $portable_dir;
+                $bolero_dir = $portable_dir;
             }
-            $ephect_vendor_lib = $ephect_dir . 'Framework' . DIRECTORY_SEPARATOR;
-            $ephect_vendor_apps = $ephect_dir . 'Apps' . DIRECTORY_SEPARATOR;
+            $bolero_vendor_lib = $bolero_dir . 'Framework' . DIRECTORY_SEPARATOR;
+            $bolero_vendor_apps = $bolero_dir . 'Apps' . DIRECTORY_SEPARATOR;
 
-            $ephect_root = SITE_ROOT . $ephect_vendor_lib;
+            $bolero_root = SITE_ROOT . $bolero_vendor_lib;
         } else {
             if (file_exists(SITE_ROOT . $portable_dir . $bootstrap)) {
-                $ephect_dir = $portable_dir;
+                $bolero_dir = $portable_dir;
             }
-            $ephect_vendor_lib = $ephect_dir . 'Framework' . DIRECTORY_SEPARATOR;
-            $ephect_vendor_apps = $ephect_dir . 'Apps' . DIRECTORY_SEPARATOR;
+            $bolero_vendor_lib = $bolero_dir . 'Framework' . DIRECTORY_SEPARATOR;
+            $bolero_vendor_apps = $bolero_dir . 'Apps' . DIRECTORY_SEPARATOR;
 
-            $ephect_root = SITE_ROOT . $ephect_vendor_lib;
+            $bolero_root = SITE_ROOT . $bolero_vendor_lib;
         }
     }
 
-    define('EPHECT_VENDOR_SRC', $ephect_dir);
+    define('BOLERO_VENDOR_SRC', $bolero_dir);
     define('AJIL_VENDOR_SRC', $ajil_dir);
-    define('EPHECT_VENDOR_LIB', $ephect_vendor_lib);
-    define('EPHECT_VENDOR_APPS', $ephect_vendor_apps);
+    define('BOLERO_VENDOR_LIB', $bolero_vendor_lib);
+    define('BOLERO_VENDOR_APPS', $bolero_vendor_apps);
 
-    define('EPHECT_APPS_ROOT', SITE_ROOT . EPHECT_VENDOR_APPS);
+    define('BOLERO_APPS_ROOT', SITE_ROOT . BOLERO_VENDOR_APPS);
 
     define('REQUEST_URI', 'https://localhost/');
     define('REQUEST_METHOD', 'GET');
@@ -190,10 +190,10 @@ define('RUNTIME_JS_DIR', DOCUMENT_ROOT . REL_RUNTIME_JS_DIR);
 define('RUNTIME_CSS_DIR', DOCUMENT_ROOT . REL_RUNTIME_CSS_DIR);
 
 
-define('EPHECT_VENDOR_WIDGETS', EPHECT_VENDOR_SRC . 'Widgets' . DIRECTORY_SEPARATOR);
-define('EPHECT_VENDOR_PLUGINS', EPHECT_VENDOR_SRC . 'Plugins' . DIRECTORY_SEPARATOR);
-define('EPHECT_WIDGETS_ROOT', SITE_ROOT . EPHECT_VENDOR_WIDGETS);
-define('EPHECT_PLUGINS_ROOT', SITE_ROOT . EPHECT_VENDOR_PLUGINS);
+define('BOLERO_VENDOR_WIDGETS', BOLERO_VENDOR_SRC . 'Widgets' . DIRECTORY_SEPARATOR);
+define('BOLERO_VENDOR_PLUGINS', BOLERO_VENDOR_SRC . 'Plugins' . DIRECTORY_SEPARATOR);
+define('BOLERO_WIDGETS_ROOT', SITE_ROOT . BOLERO_VENDOR_WIDGETS);
+define('BOLERO_PLUGINS_ROOT', SITE_ROOT . BOLERO_VENDOR_PLUGINS);
 
 define('APP_DIR', 'app' . DIRECTORY_SEPARATOR);
 define('APP_ROOT', SRC_ROOT . APP_DIR);
@@ -224,10 +224,10 @@ define('ERROR_LOG', LOG_PATH . 'error.log');
 define('SQL_LOG', LOG_PATH . 'sql.log');
 define('ROUTES_JSON', RUNTIME_DIR . 'routes.json');
 
-define('FRAMEWORK_ROOT', EPHECT_ROOT . 'Framework' . DIRECTORY_SEPARATOR);
-define('HOOKS_ROOT', EPHECT_ROOT . 'Hooks' . DIRECTORY_SEPARATOR);
-define('PLUGINS_ROOT', EPHECT_ROOT . 'Plugins' . DIRECTORY_SEPARATOR);
-define('COMMANDS_ROOT', EPHECT_ROOT . 'Commands' . DIRECTORY_SEPARATOR);
+define('FRAMEWORK_ROOT', BOLERO_ROOT . 'Framework' . DIRECTORY_SEPARATOR);
+define('HOOKS_ROOT', BOLERO_ROOT . 'Hooks' . DIRECTORY_SEPARATOR);
+define('PLUGINS_ROOT', BOLERO_ROOT . 'Plugins' . DIRECTORY_SEPARATOR);
+define('COMMANDS_ROOT', BOLERO_ROOT . 'Commands' . DIRECTORY_SEPARATOR);
 define('CUSTOM_COMMANDS_ROOT', SRC_ROOT . CONFIG_COMMANDS . DIRECTORY_SEPARATOR);
 define('CUSTOM_COMPONENTS_ROOT', SRC_ROOT . CONFIG_COMPONENTS . DIRECTORY_SEPARATOR);
 define('CUSTOM_WEBCOMPONENTS_ROOT', SRC_ROOT . CONFIG_WEBCOMPONENTS . DIRECTORY_SEPARATOR);

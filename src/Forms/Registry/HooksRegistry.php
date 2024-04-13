@@ -31,7 +31,7 @@ class HooksRegistry
         if (!IS_PHAR_APP) {
 
             $hooks = [];
-            $dir_handle = opendir(EPHECT_ROOT . HOOKS_PATH);
+            $dir_handle = opendir(BOLERO_ROOT . HOOKS_PATH);
         
             while (false !== $filename = readdir($dir_handle)) {
                 if ($filename == '.' || $filename == '..') {
@@ -40,7 +40,7 @@ class HooksRegistry
         
                 array_push($hooks, str_replace(DIRECTORY_SEPARATOR, '_' , HOOKS_PATH . $filename));
         
-                include EPHECT_ROOT . HOOKS_PATH . $filename;
+                include BOLERO_ROOT . HOOKS_PATH . $filename;
             }
         
             $hooksRegistry = ['Hooks' => $hooks];

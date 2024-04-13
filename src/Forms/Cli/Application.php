@@ -2,7 +2,7 @@
 
 namespace Bolero\Forms\CLI;
 
-use Ephect\Commands\Constants\Lib;
+use Bolero\Commands\Constants\Lib;
 use Bolero\Forms\Commands\ApplicationCommands;
 use Bolero\Forms\Commands\CommandRunner;
 use Bolero\Forms\Core\AbstractApplication;

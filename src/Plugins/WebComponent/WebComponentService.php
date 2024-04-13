@@ -1,12 +1,12 @@
 <?php
 
-namespace Ephect\Plugins\WebComponent;
+namespace Bolero\Plugins\WebComponent;
 
-use Ephect\Framework\Components\ChildrenInterface;
-use Ephect\Framework\IO\Utils;
-use Ephect\Framework\WebComponents\ManifestEntity;
-use Ephect\Framework\WebComponents\ManifestReader;
-use Ephect\Framework\WebComponents\Parser;
+use Bolero\Forms\Components\ChildrenInterface;
+use Bolero\Forms\IO\Utils;
+use Bolero\Forms\WebComponents\ManifestEntity;
+use Bolero\Forms\WebComponents\ManifestReader;
+use Bolero\Forms\WebComponents\Parser;
 
 class WebComponentService implements WebComponentServiceInterface
 {

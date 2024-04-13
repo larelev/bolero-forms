@@ -1,6 +1,6 @@
 <?php
 
-namespace Ephect\Hooks;
+namespace Bolero\Hooks;
 
 function useInterval($callback, $ms, $max = 0)
 {

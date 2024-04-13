@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Commands\Constants;
+namespace Bolero\Commands\Constants;
 
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "show", subject: "constants")]
 #[CommandDeclaration(desc: "Display the application constants.")]

@@ -1,11 +1,11 @@
 <?php
 
-namespace Ephect\Commands\InfoModules;
+namespace Bolero\Commands\InfoModules;
 
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
-use Ephect\Framework\Core\PhpInfo;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Core\PhpInfo;
 
 #[CommandDeclaration(verb: "show", subject: "modules")]
 #[CommandDeclaration(desc: "Display the module section of phpinfo() output.")]

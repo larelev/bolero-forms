@@ -1,11 +1,11 @@
 <?php
 
-namespace Ephect\Plugins\Setup;
+namespace Bolero\Plugins\Setup;
 
-use Ephect\Framework\Core\PhpInfo;
-use Ephect\Framework\IO\Utils;
-use Ephect\Framework\Logger\Logger;
-use Ephect\Framework\Web\Curl;
+use Bolero\Forms\Core\PhpInfo;
+use Bolero\Forms\IO\Utils;
+use Bolero\Forms\Logger\Logger;
+use Bolero\Forms\Web\Curl;
 
 class SetupService
 {
@@ -129,9 +129,9 @@ class SetupService
     {
         $ok = false;
 
-        $vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'ephect-io' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR;
+        $vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'bolero-io' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR;
         $portable_dir = 'framework' . DIRECTORY_SEPARATOR;
-        $lib = 'ephect' . DIRECTORY_SEPARATOR . 'bootstrap.php';
+        $lib = 'bolero' . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
         $framework_dir = 'framework';
         if (file_exists(SITE_ROOT . $vendor_dir . $lib)) {
@@ -193,7 +193,7 @@ BOOTSTRAP2;
 <?php
 include 'bootstrap.php';
 
-Ephect\Web\Application::create();
+Bolero\Web\Application::create();
 
 INDEX;
 

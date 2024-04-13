@@ -48,7 +48,7 @@ class Application extends AbstractApplication
         $constants['DOCUMENT_ROOT'] = DOCUMENT_ROOT;
         $constants['HTTP_PROTOCOL'] = HTTP_PROTOCOL;
         $constants['SRC_ROOT'] = SRC_ROOT;
-        $constants['EPHECT_ROOT'] = EPHECT_ROOT;
+        $constants['BOLERO_ROOT'] = BOLERO_ROOT;
         $constants['APP_NAME'] = APP_NAME;
         $constants['APP_ROOT'] = APP_ROOT;
         $constants['CONTROLLER_ROOT'] = CONTROLLER_ROOT;

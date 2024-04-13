@@ -96,8 +96,8 @@ final class OpenComponentsParser extends AbstractTokenParser
                 $preComponentBody .= "\t\t\t<?php } ?>\n";
             }
 
-            $componentRender = "<?php \$struct = new \\Ephect\\Framework\\Components\\ChildrenStructure(['props' => (object) $props, 'buffer' => function()$useChildren{?>\n\n$preComponentBody$componentBody\n<?php\n}, 'motherUID' => '$motherUID', 'uid' => '$uid', 'class' => '$className', 'name' => '$name', 'parentProps' => $classArgs]); ?>\n";
-            $componentRender .= "\t\t\t<?php {$pkey} = new \\Ephect\\Framework\\Components\\Children(\$struct); ?>\n";
+            $componentRender = "<?php \$struct = new \\Bolero\\Framework\\Components\\ChildrenStructure(['props' => (object) $props, 'buffer' => function()$useChildren{?>\n\n$preComponentBody$componentBody\n<?php\n}, 'motherUID' => '$motherUID', 'uid' => '$uid', 'class' => '$className', 'name' => '$name', 'parentProps' => $classArgs]); ?>\n";
+            $componentRender .= "\t\t\t<?php {$pkey} = new \\Bolero\\Framework\\Components\\Children(\$struct); ?>\n";
             $componentRender .= "\t\t\t<?php \$fn = \\$fqComponentName({$pkey}); \$fn(); ?>\n";
 
             $subject = str_replace($componentBody, $componentRender, $subject);

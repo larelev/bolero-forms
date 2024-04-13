@@ -1,13 +1,13 @@
 <?php
 
-namespace Ephect\Commands\RequireMaster;
+namespace Bolero\Commands\RequireMaster;
 
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "wget", subject: "master-branch")]
-#[CommandDeclaration(desc: "Download the ZIP file of the master branch of Ephect framework.")]
+#[CommandDeclaration(desc: "Download the ZIP file of the master branch of Bolero framework.")]
 #[CommandDeclaration(isPhar: IS_PHAR_APP)]
 class Main extends AbstractCommand
 {

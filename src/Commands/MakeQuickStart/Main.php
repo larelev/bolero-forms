@@ -1,10 +1,10 @@
 <?php
 
-namespace Ephect\Commands\MakeQuickStart;
+namespace Bolero\Commands\MakeQuickStart;
 
-use Ephect\Commands\CommonLib;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "make", subject: "quickstart")]
 #[CommandDeclaration(desc: "Create the quickstart application tree.")]

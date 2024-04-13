@@ -1,6 +1,6 @@
 <?php
 
-namespace Ephect\Plugins\HtmlSaver;
+namespace Bolero\Plugins\HtmlSaver;
 
 interface HtmlSaveServiceInterface
 {

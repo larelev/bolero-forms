@@ -1,10 +1,10 @@
 <?php
 
-use Ephect\Framework\Core\Autoloader;
-use Ephect\Framework\JavaScripts\AjilBuilder;
-use Ephect\Framework\Registry\FrameworkRegistry;
-use Ephect\Framework\Registry\HooksRegistry;
-use Ephect\Framework\Registry\PharRegistry;
+use Bolero\Forms\Core\Autoloader;
+use Bolero\Forms\JavaScripts\AjilBuilder;
+use Bolero\Forms\Registry\FrameworkRegistry;
+use Bolero\Forms\Registry\HooksRegistry;
+use Bolero\Forms\Registry\PharRegistry;
 
 define('LIBDIR_SEPARATOR', Phar::running() ? '_' : DIRECTORY_SEPARATOR);
 define('FRAMEWORK_PATH',  dirname(__FILE__) . LIBDIR_SEPARATOR . 'Framework' . LIBDIR_SEPARATOR);

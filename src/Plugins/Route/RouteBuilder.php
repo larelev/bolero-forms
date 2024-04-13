@@ -1,8 +1,8 @@
 <?php
 
-namespace Ephect\Plugins\Route;
+namespace Bolero\Plugins\Route;
 
-use Ephect\Framework\Components\Builders\AbstractBuilder;
+use Bolero\Forms\Components\Builders\AbstractBuilder;
 
 class RouteBuilder extends AbstractBuilder
 {

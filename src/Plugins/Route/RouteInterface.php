@@ -1,8 +1,8 @@
 <?php
 
-namespace Ephect\Plugins\Route;
+namespace Bolero\Plugins\Route;
 
-use Ephect\Framework\ElementInterface;
+use Bolero\Forms\ElementInterface;
 
 interface RouteInterface extends ElementInterface
 {

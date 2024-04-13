@@ -259,7 +259,7 @@ class ComponentEntity extends Tree implements ComponentEntityInterface
                 "id": 0,
                 "name": "FakeFragment",
                 "class": null,
-                "component": "Ephect",
+                "component": "Bolero",
                 "text": "<>",
                 "method": "echo",
                 "startsAt": 0,

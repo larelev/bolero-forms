@@ -1,13 +1,13 @@
 <?php
 
-namespace Ephect\Commands\MakeWebComponent;
+namespace Bolero\Commands\MakeWebComponent;
 
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\CLI\ConsoleColors;
-use Ephect\Framework\Commands\AbstractCommandLib;
-use Ephect\Framework\IO\Utils;
-use Ephect\Framework\WebComponents\Builder;
-use Ephect\Framework\WebComponents\ManifestStructure;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\CLI\ConsoleColors;
+use Bolero\Forms\Commands\AbstractCommandLib;
+use Bolero\Forms\IO\Utils;
+use Bolero\Forms\WebComponents\Builder;
+use Bolero\Forms\WebComponents\ManifestStructure;
 use Exception;
 
 class Lib extends AbstractCommandLib
@@ -28,7 +28,7 @@ class Lib extends AbstractCommandLib
 
             $builder->saveManifest($tagName, $className, $entrypoint, $arguments, $destDir);
 
-            $srcDir = EPHECT_ROOT . DIRECTORY_SEPARATOR . 'WebComponents' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR;
+            $srcDir = BOLERO_ROOT . DIRECTORY_SEPARATOR . 'WebComponents' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR;
 
             $builder->copyTemplates($tagName, $className, $entrypoint, $arguments, $srcDir, $destDir);
 

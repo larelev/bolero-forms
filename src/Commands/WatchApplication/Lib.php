@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Commands\WatchApplication;
+namespace Bolero\Commands\WatchApplication;
 
-use Ephect\Framework\Commands\AbstractCommandLib;
-use Ephect\Framework\Components\FileSystem\Watcher;
+use Bolero\Forms\Commands\AbstractCommandLib;
+use Bolero\Forms\Components\FileSystem\Watcher;
 
 class Lib extends AbstractCommandLib
 {

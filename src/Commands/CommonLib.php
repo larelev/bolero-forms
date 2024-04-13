@@ -1,11 +1,11 @@
 <?php
 
-namespace Ephect\Commands;
+namespace Bolero\Commands;
 
-use Ephect\Framework\CLI\Application;
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\Element;
-use Ephect\Framework\IO\Utils;
+use Bolero\Forms\CLI\Application;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\Element;
+use Bolero\Forms\IO\Utils;
 
 class CommonLib extends Element
 {
@@ -20,7 +20,7 @@ class CommonLib extends Element
 
     public function createCommonTrees(): void
     {
-        $common = EPHECT_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Common';
+        $common = BOLERO_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Common';
         $src_dir = $common . DIRECTORY_SEPARATOR . 'config';
 
         Utils::safeMkDir(CONFIG_DIR);

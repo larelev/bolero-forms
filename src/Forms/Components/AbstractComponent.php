@@ -8,7 +8,7 @@ use Bolero\Forms\Registry\CacheRegistry;
 use Bolero\Forms\Registry\CodeRegistry;
 use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Tree\Tree;
-use Ephect\Plugins\Router\RouterService;
+use Bolero\Plugins\Router\RouterService;
 use Exception;
 use ReflectionFunction;
 use stdClass;

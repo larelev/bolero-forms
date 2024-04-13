@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Commands\MakeWebComponent;
+namespace Bolero\Commands\MakeWebComponent;
 
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "make", subject: "webcomponent")]
 #[CommandDeclaration(desc: "Create the base tree of a webComponent.")]

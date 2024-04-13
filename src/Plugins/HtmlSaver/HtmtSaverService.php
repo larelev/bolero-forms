@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Plugins\HtmlSaver;
+namespace Bolero\Plugins\HtmlSaver;
 
-use Ephect\Framework\Components\ChildrenInterface;
-use Ephect\Framework\IO\Utils;
+use Bolero\Forms\Components\ChildrenInterface;
+use Bolero\Forms\IO\Utils;
 
 class HtmlSaverService implements HtmlSaveServiceInterface
 {

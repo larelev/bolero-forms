@@ -1,15 +1,15 @@
 <?php
 
-namespace Ephect\Commands\MakeQuickStart;
+namespace Bolero\Commands\MakeQuickStart;
 
-use Ephect\Framework\IO\Utils;
+use Bolero\Forms\IO\Utils;
 
 class Lib
 {
 
     public function createQuickstart(): void
     {
-        $sample = EPHECT_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'QuickStart';
+        $sample = BOLERO_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'QuickStart';
 
         Utils::safeMkDir(SRC_ROOT);
         $destDir = realpath(SRC_ROOT);

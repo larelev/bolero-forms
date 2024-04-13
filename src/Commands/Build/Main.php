@@ -1,9 +1,9 @@
 <?php
 
-namespace Ephect\Commands\Build;
+namespace Bolero\Commands\Build;
 
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "build")]
 #[CommandDeclaration(desc: "Build the application.")]

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ephect\Plugins\Route;
+namespace Bolero\Plugins\Route;
 
-use Ephect\Framework\Core\Structure;
+use Bolero\Forms\Core\Structure;
 
 class RouteStructure extends Structure
 {

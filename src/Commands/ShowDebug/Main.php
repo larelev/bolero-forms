@@ -1,10 +1,10 @@
 <?php
 
-namespace Ephect\Commands\Debug;
+namespace Bolero\Commands\Debug;
 
-use Ephect\Framework\CLI\Console;
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\CLI\Console;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "show", subject: "debug")]
 #[CommandDeclaration(desc: "Display the debug log.")]

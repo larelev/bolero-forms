@@ -1,11 +1,11 @@
 <?php
 
-namespace Ephect\Apps\Egg;
+namespace Bolero\Apps\Egg;
 
-use Ephect\Commands\CommonLib;
-use Ephect\Framework\CLI\Application;
-use Ephect\Framework\Element;
-use Ephect\Framework\IO\Utils;
+use Bolero\Commands\CommonLib;
+use Bolero\Forms\CLI\Application;
+use Bolero\Forms\Element;
+use Bolero\Forms\IO\Utils;
 use Phar;
 
 class PharLib extends Element
@@ -36,28 +36,28 @@ class PharLib extends Element
 
         $master = $libRoot . 'master';
         $filename = $master . '.zip';
-        $ephectDir = $master . DIRECTORY_SEPARATOR . 'ephect-master' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'ephect' . DIRECTORY_SEPARATOR;
+        $boleroDir = $master . DIRECTORY_SEPARATOR . 'bolero-master' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'bolero' . DIRECTORY_SEPARATOR;
 
         $tree = [];
 
         if (!file_exists($filename)) {
-            Console::writeLine('Downloading ephect github master');
+            Console::writeLine('Downloading bolero github master');
             $curl = new Curl();
-            $result = $curl->request('https://codeload.github.com/CodePhoenixOrg/ephect/zip/master');
+            $result = $curl->request('https://codeload.github.com/CodePhoenixOrg/bolero/zip/master');
             file_put_contents($filename, $result->content);
         }
 
         if (file_exists($filename)) {
-            Console::writeLine('Inflating ephect master archive');
+            Console::writeLine('Inflating bolero master archive');
             $zip = new Zip();
             $zip->inflate($filename);
         }
 
         if (file_exists($master)) {
-            $tree = Utils::walkTree($ephectDir, ['php']);
+            $tree = Utils::walkTree($boleroDir, ['php']);
         }
 
-        $result = ['path' => $ephectDir, 'tree' => $tree];
+        $result = ['path' => $boleroDir, 'tree' => $tree];
 
         return (object) $result;
     }
@@ -70,8 +70,8 @@ class PharLib extends Element
 
     public function makeMasterPhar(): void
     {
-        $ephectTree = $this->requireMaster();
-        $this->_makePhar($ephectTree);
+        $boleroTree = $this->requireMaster();
+        $this->_makePhar($boleroTree);
     }
 
     public function makeVendorPhar(): void
@@ -114,12 +114,12 @@ class PharLib extends Element
             Console::writeLine('APP_DIR::' . APP_CWD);
             $this->addPharFiles();
 
-            $ephectTree = $this->egg->requireTree(EPHECT_ROOT);
+            $boleroTree = $this->egg->requireTree(BOLERO_ROOT);
 
-            // $this->addFileToPhar(EPHECT_ROOT . 'ephect_library.php', "ephect_library.php");
+            // $this->addFileToPhar(BOLERO_ROOT . 'bolero_library.php', "bolero_library.php");
 
-            foreach ($ephectTree->tree as $file) {
-                $filepath = $ephectTree->path . $file;
+            foreach ($boleroTree->tree as $file) {
+                $filepath = $boleroTree->path . $file;
                 $filepath = realpath($filepath);
                 $filename = str_replace(DIRECTORY_SEPARATOR, '_', $file);
  
