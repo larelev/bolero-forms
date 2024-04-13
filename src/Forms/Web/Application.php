@@ -35,7 +35,7 @@ class Application extends AbstractApplication
 
         $app = new Component('App');
         $app->render();
-        
+
         // $motherUID = $app->getMotherUID();
         // $compiler->buildWebcomponents($motherUID);
 
@@ -48,7 +48,7 @@ class Application extends AbstractApplication
         $constants['DOCUMENT_ROOT'] = DOCUMENT_ROOT;
         $constants['HTTP_PROTOCOL'] = HTTP_PROTOCOL;
         $constants['SRC_ROOT'] = SRC_ROOT;
-        $constants['BOLERO_ROOT'] = BOLERO_ROOT;
+        $constants['EPHECT_ROOT'] = EPHECT_ROOT;
         $constants['APP_NAME'] = APP_NAME;
         $constants['APP_ROOT'] = APP_ROOT;
         $constants['CONTROLLER_ROOT'] = CONTROLLER_ROOT;
@@ -83,13 +83,13 @@ class Application extends AbstractApplication
 
         StateRegistry::write('console', 'buffer', $constants);
 
-        Console::writeLine('Application constants are :');
+        Console::Log('Application constants are :');
         foreach ($constants as $key => $value) {
-            Console::writeLine($key . ' => ' . $value);
+            Console::Log($key . ' => ' . $value);
         }
 
         return $constants;
     }
 
-  
+
 }

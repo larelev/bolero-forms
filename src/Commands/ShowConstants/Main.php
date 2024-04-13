@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Constants;
+namespace Bolero\Forms\Commands\Constants;
 
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;

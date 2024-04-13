@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\History;
+namespace Bolero\Forms\Commands\History;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;

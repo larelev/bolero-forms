@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Plugins\Route;
+namespace Bolero\Forms\Plugins\Route;
 
 use Bolero\Forms\Element;
 use Bolero\Forms\ElementTrait;
@@ -24,7 +24,7 @@ class RouteEntity extends Element implements RouteInterface
         $this->normalized = $struct->normalized;
         $this->redirect = $struct->redirect;
         $this->translation = $struct->translation;
-        $this->error = (int) $struct->error;
+        $this->error = (int)$struct->error;
         $this->exact = $struct->exact !== 'true' ?: true;
 
     }
@@ -63,4 +63,4 @@ class RouteEntity extends Element implements RouteInterface
     {
         return $this->exact;
     }
- }
+}

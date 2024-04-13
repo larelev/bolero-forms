@@ -1,13 +1,12 @@
 <?php
 
-namespace Bolero\Commands\MakeWebComponent;
+namespace Bolero\Forms\Commands\MakeWebComponent;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\CLI\ConsoleColors;
+use Bolero\Forms\CLI\ConsoleOptions;
 use Bolero\Forms\Commands\AbstractCommandLib;
-use Bolero\Forms\IO\Utils;
 use Bolero\Forms\WebComponents\Builder;
-use Bolero\Forms\WebComponents\ManifestStructure;
 use Exception;
 
 class Lib extends AbstractCommandLib
@@ -22,20 +21,20 @@ class Lib extends AbstractCommandLib
             Console::writeLine(ConsoleColors::getColoredString("Leave the answer blank to pass to the next question or to abort the process.", ConsoleColors::BROWN));
 
             $builder = new Builder;
-            [$tagName, $className, $entrypoint, $arguments] = $this->readLine();
+            [$tagName, $className, $hasBackendProps, $entrypoint, $arguments] = $this->readLine();
 
-            $destDir = SRC_ROOT . DIRECTORY_SEPARATOR . 'WebComponents' . DIRECTORY_SEPARATOR . $className . DIRECTORY_SEPARATOR;
+            $destDir = SRC_ROOT . 'WebComponents' . DIRECTORY_SEPARATOR . $className . DIRECTORY_SEPARATOR;
 
             $builder->saveManifest($tagName, $className, $entrypoint, $arguments, $destDir);
 
-            $srcDir = BOLERO_ROOT . DIRECTORY_SEPARATOR . 'WebComponents' . DIRECTORY_SEPARATOR . 'Templates' . DIRECTORY_SEPARATOR;
+            $srcDir = EPHECT_ROOT . 'Templates' . DIRECTORY_SEPARATOR . 'WebComponents' . DIRECTORY_SEPARATOR;
 
-            $builder->copyTemplates($tagName, $className, $entrypoint, $arguments, $srcDir, $destDir);
+            $builder->copyTemplates($tagName, $className, $hasBackendProps, $entrypoint, $arguments, $srcDir, $destDir);
 
             Console::writeLine(ConsoleColors::getColoredString("WebComponent ", ConsoleColors::BLUE) . "%s" .  ConsoleColors::getColoredString(" is available in:", ConsoleColors::BLUE), $className);
             Console::writeLine("%s", $destDir);
         } catch (Exception $ex) {
-            Console::error($ex);
+            Console::error($ex, ConsoleOptions::ErrorMessageOnly);
         }
     }
 
@@ -48,9 +47,9 @@ class Lib extends AbstractCommandLib
     function readLine(): array
     {
         /**
-         * Asking the tag name
+         * Asking the tag name.
          */
-        $tagName = Console::readLine("Tag name (kebab-case):");
+        $tagName = Console::readLine("Tag name (kebab-case): ");
         $tagName =  strtolower($tagName);
         if (trim($tagName) == '') {
             throw new Exception("WebComponent tag name must not be empty");
@@ -59,23 +58,28 @@ class Lib extends AbstractCommandLib
         Console::writeLine(ConsoleColors::getColoredString("The code of the webComponent will split into one JS module and one HTML template.", ConsoleColors::BLUE));
 
         /**
-         * Asking for the class name
+         * Asking for the class name.
          */
-        $className = Console::readLine("Module class name (PascalCase):");
+        $className = Console::readLine("Module class name (PascalCase): ");
         if (trim($className) == '') {
             throw new Exception("WebComponent class name must not be empty");
         }
 
         /**
-         * Asking for entrypoint
+         * Asking whether we encapsulate the webcomponent in a backend function or not.
          */
-        $entrypoint = Console::readLine("Entrypoint in class (camelCase):");
+        $hasBackendProps = Console::readYesOrNo("Do you need to implement backend props?");
+
+        /**
+         * Asking for entrypoint.
+         */
+        $entrypoint = Console::readLine("Entrypoint in class (camelCase): ");
         if (trim($entrypoint) == '') {
             throw new Exception("WebComponent entrypoint must not be empty");
         }
 
         /**
-         * Asking for arguments
+         * Asking for entrypoint arguments.
          */
         $next = true;
         $argIndex = 1;
@@ -91,7 +95,7 @@ class Lib extends AbstractCommandLib
             $argIndex++;
         }
 
-        return [$tagName, $className, $entrypoint, $arguments];
+        return [$tagName, $className, $hasBackendProps, $entrypoint, $arguments];
     }
 
    

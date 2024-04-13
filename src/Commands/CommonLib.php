@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands;
+namespace Bolero\Forms\Commands;
 
 use Bolero\Forms\CLI\Application;
 use Bolero\Forms\CLI\Console;
@@ -20,7 +20,7 @@ class CommonLib extends Element
 
     public function createCommonTrees(): void
     {
-        $common = BOLERO_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Common';
+        $common = EPHECT_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Common';
         $src_dir = $common . DIRECTORY_SEPARATOR . 'config';
 
         Utils::safeMkDir(CONFIG_DIR);
@@ -51,7 +51,7 @@ class CommonLib extends Element
         $tree = Utils::walkTreeFiltered($treePath, ['php']);
         $result = ['path' => $treePath, 'tree' => $tree];
 
-        return (object) $result;
+        return (object)$result;
     }
 
     public function displayTree($path): void
@@ -61,5 +61,4 @@ class CommonLib extends Element
     }
 
 
-  
 }

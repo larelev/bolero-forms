@@ -8,18 +8,17 @@ use Bolero\Forms\Registry\CacheRegistry;
 use Bolero\Forms\Registry\CodeRegistry;
 use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Tree\Tree;
-use Bolero\Plugins\Router\RouterService;
+use Bolero\Forms\Plugins\Router\RouterService;
 use Exception;
 use ReflectionFunction;
 use stdClass;
-use tidy;
+use Bolero\Forms\Web\Request;
 
 abstract class AbstractComponent extends Tree implements ComponentInterface
 {
     use ElementTrait;
 
     protected ?string $code;
-    protected ?string $parentHTML;
     protected ?stdClass $children = null;
     protected ?ComponentDeclaration $declaration = null;
     protected ?ComponentEntity $entity = null;
@@ -42,11 +41,6 @@ abstract class AbstractComponent extends Tree implements ComponentInterface
         return $this->declaration;
     }
 
-    public function resetDeclaration(): void
-    {
-        $this->declaration = null;
-    }
-
     protected function setDeclaration(): void
     {
         $fqName = ComponentRegistry::read($this->uid);
@@ -64,6 +58,11 @@ abstract class AbstractComponent extends Tree implements ComponentInterface
         $decl = new ComponentDeclaration($struct);
 
         $this->declaration = $decl;
+    }
+
+    public function resetDeclaration(): void
+    {
+        $this->declaration = null;
     }
 
     public function getEntity(): ?ComponentEntity
@@ -97,12 +96,21 @@ abstract class AbstractComponent extends Tree implements ComponentInterface
     public function getFullyQualifiedFunction(): ?string
     {
         if ($this->function === null) return null;
-        return $this->namespace  . '\\' . $this->function;
+        return $this->namespace . '\\' . $this->function;
     }
 
     public function getFunction(): ?string
     {
         return $this->function;
+    }
+
+    public function composedOfUnique(): ?array
+    {
+        $result = $this->composedOf();
+
+        if ($result === null) return null;
+
+        return array_unique($result);
     }
 
     public function composedOf(): ?array
@@ -122,15 +130,6 @@ abstract class AbstractComponent extends Tree implements ComponentInterface
         }
 
         return $names;
-    }
-
-    public function composedOfUnique(): ?array
-    {
-        $result = $this->composedOf();
-
-        if ($result === null) return null;
-
-        return array_unique($result);
     }
 
     public function findComponent(string $componentName, string $motherUID): array
@@ -156,16 +155,24 @@ abstract class AbstractComponent extends Tree implements ComponentInterface
         return [$fqFuncName, $filename, $isCached];
     }
 
-    public function renderHTML(string $cacheFilename, string $fqFunctionName, ?array $functionArgs = null): string
+    /**
+     * @throws \ReflectionException
+     */
+    public function renderHTML(string $cacheFilename, string $fqFunctionName, ?array $functionArgs = null, ?Request $request = null): string
     {
         include_once CACHE_DIR . $cacheFilename;
 
         $funcReflection = new ReflectionFunction($fqFunctionName);
         $funcParams = $funcReflection->getParameters();
 
+        $bodyProps = null;
+        if($request !== null && $request->headers->contains('application/json', 'content-type')) {
+            $bodyProps = json_decode($request->body);
+        }
+
         $html = '';
 
-        if ($funcParams === []) {
+        if ($funcParams === [] && $bodyProps === null) {
             ob_start();
             $fn = call_user_func($fqFunctionName);
             $fn();
@@ -186,15 +193,22 @@ abstract class AbstractComponent extends Tree implements ComponentInterface
                     }
                 }
             }
+
+            if($bodyProps !== null) {
+                if($props === null) {
+                    $props = new stdClass;
+                }
+                foreach ($bodyProps as $field => $value) {
+                    $props->{$field} = $value;
+                }
+            }
             ob_start();
             $fn = call_user_func($fqFunctionName, $props);
             $fn();
             $html = ob_get_clean();
         }
 
-        // $fqFunctionName = explode('\\', $functionName);
-        // $function = array_pop($fqFunctionName);
-        // if ($function === 'App') {
+        // if ($funcName === 'App') {
         //     $html = self::format($html);
         // }
 
@@ -204,12 +218,12 @@ abstract class AbstractComponent extends Tree implements ComponentInterface
     protected function format(string $html): string
     {
         $config = [
-            'indent'      => true,
+            'indent' => true,
             'output-html' => true,
-            'wrap'        => 200
+            'wrap' => 200
         ];
 
-        $tidy = new tidy;
+        $tidy = new \tidy;
         $tidy->parseString($html, $config, 'utf8');
         $tidy->cleanRepair();
 

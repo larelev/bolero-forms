@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Plugins\Route;
+namespace Bolero\Forms\Plugins\Route;
 
 use Bolero\Forms\Core\Structure;
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Plugins\HtmlSaver;
+namespace Bolero\Forms\Plugins\HtmlSaver;
 
 use Bolero\Forms\Components\ChildrenInterface;
 use Bolero\Forms\IO\Utils;
@@ -15,7 +15,7 @@ class HtmlSaverService implements HtmlSaveServiceInterface
     public function canRender(): bool
     {
         $canRender = $this->children->getAttribute('render') ?? true;
-        
+
         return $canRender;
     }
 

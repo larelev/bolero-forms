@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Running;
+namespace Bolero\Forms\Commands\Running;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;

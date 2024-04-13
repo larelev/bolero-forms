@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Help;
+namespace Bolero\Forms\Commands\Help;
 
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;

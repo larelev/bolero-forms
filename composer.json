@@ -4,11 +4,6 @@
   "description": "Professional PHP experiments",
   "license": "GPL-3.0+",
   "version": "0.1.0",
-  "autoload": {
-    "psr-4": {
-      "Bolero\\": "src/"
-    }
-  },
   "authors": [{
     "name": "David Blanchard",
     "email": "dpjb@hotmail.fr",

@@ -9,7 +9,8 @@ class FrameworkRegistry extends AbstractStaticRegistry
 {
     private static $instance = null;
 
-    public static function reset(): void { 
+    public static function reset(): void
+    {
         self::$instance = new FrameworkRegistry;
         self::$instance->_setCacheDirectory(RUNTIME_DIR);
         unlink(self::$instance->getCacheFilename());
@@ -29,7 +30,7 @@ class FrameworkRegistry extends AbstractStaticRegistry
     {
         if (!FrameworkRegistry::uncache(true)) {
 
-            $frameworkFiles = Utils::walkTreeFiltered(BOLERO_ROOT, ['php']);
+            $frameworkFiles = Utils::walkTreeFiltered(EPHECT_ROOT, ['php']);
 
             foreach ($frameworkFiles as $filename) {
                 if (
@@ -41,42 +42,41 @@ class FrameworkRegistry extends AbstractStaticRegistry
                 }
 
                 if (false !== strpos($filename, 'Interface')) {
-                    list($namespace, $interface) = ElementUtils::getInterfaceDefinitionFromFile(BOLERO_ROOT . $filename);
+                    list($namespace, $interface) = ElementUtils::getInterfaceDefinitionFromFile(EPHECT_ROOT . $filename);
                     $fqname = $namespace . '\\' . $interface;
-                    FrameworkRegistry::write($fqname, BOLERO_ROOT . $filename);
+                    FrameworkRegistry::write($fqname, EPHECT_ROOT . $filename);
                     continue;
                 }
 
                 if (false !== strpos($filename, 'Trait')) {
-                    list($namespace, $trait) = ElementUtils::getTraitDefinitionFromFile(BOLERO_ROOT . $filename);
+                    list($namespace, $trait) = ElementUtils::getTraitDefinitionFromFile(EPHECT_ROOT . $filename);
                     $fqname = $namespace . '\\' . $trait;
-                    FrameworkRegistry::write($fqname, BOLERO_ROOT . $filename);
+                    FrameworkRegistry::write($fqname, EPHECT_ROOT . $filename);
                     continue;
                 }
 
-                list($namespace, $class) = ElementUtils::getClassDefinitionFromFile(BOLERO_ROOT . $filename);
+                list($namespace, $class) = ElementUtils::getClassDefinitionFromFile(EPHECT_ROOT . $filename);
                 $fqname = $namespace . '\\' . $class;
                 if ($class === '') {
-                    list($namespace, $function) = ElementUtils::getFunctionDefinitionFromFile(BOLERO_ROOT . $filename);
+                    list($namespace, $function) = ElementUtils::getFunctionDefinitionFromFile(EPHECT_ROOT . $filename);
                     $fqname = $namespace . '\\' . $function;
                 }
                 if ($fqname !== '\\') {
-                    FrameworkRegistry::write($fqname, BOLERO_ROOT . $filename);
+                    FrameworkRegistry::write($fqname, EPHECT_ROOT . $filename);
                 }
             }
 
             self::registerUserClasses();
 
             FrameworkRegistry::cache(true);
-            FrameworkRegistry::cache();
 
         }
     }
-    
+
     public static function registerUserClasses(): void
     {
-        if(!file_exists(SRC_ROOT)) return;
-        
+        if (!file_exists(SRC_ROOT)) return;
+
         $sourceFiles = Utils::walkTreeFiltered(SRC_ROOT, ['php']);
 
         foreach ($sourceFiles as $filename) {

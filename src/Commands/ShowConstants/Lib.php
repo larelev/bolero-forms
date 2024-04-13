@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Constants;
+namespace Bolero\Forms\Commands\Constants;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\CLI\ConsoleColors;
@@ -20,11 +20,11 @@ class Lib extends AbstractCommandLib
             $constants['SRC_ROOT'] = SRC_ROOT;
             $constants['SITE_ROOT'] = SITE_ROOT;
             $constants['IS_PHAR_APP'] = IS_PHAR_APP ? 'TRUE' : 'FALSE';
-            $constants['BOLERO_ROOT'] = BOLERO_ROOT;
+            $constants['EPHECT_ROOT'] = EPHECT_ROOT;
 
-            // $constants['BOLERO_VENDOR_SRC'] = BOLERO_VENDOR_SRC;
-            // $constants['BOLERO_VENDOR_LIB'] = BOLERO_VENDOR_LIB;
-            // $constants['BOLERO_VENDOR_APPS'] = BOLERO_VENDOR_APPS;
+            // $constants['EPHECT_VENDOR_SRC'] = EPHECT_VENDOR_SRC;
+            // $constants['EPHECT_VENDOR_LIB'] = EPHECT_VENDOR_LIB;
+            // $constants['EPHECT_VENDOR_APPS'] = EPHECT_VENDOR_APPS;
 
             if (APP_NAME !== 'egg') {
                 $constants['APP_ROOT'] = APP_ROOT;

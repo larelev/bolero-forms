@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\ClearLogs;
+namespace Bolero\Forms\Commands\ClearLogs;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;

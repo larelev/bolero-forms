@@ -1,18 +1,18 @@
 <?php
 
-namespace Bolero\Commands\BranchTree;
+namespace Bolero\Forms\Commands\BranchTree;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration(verb: "show", subject: "branch-tree")]
-#[CommandDeclaration(desc: "Display the tree of the Bolero framework master branch.")]
+#[CommandDeclaration(desc: "Display the tree of the Bolero\Forms framework master branch.")]
 class Main extends AbstractCommand
 {
     public function run(): void
     {
-        $dir = 'master' . DIRECTORY_SEPARATOR . 'bolero-master' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'bolero';
+        $dir = 'master' . DIRECTORY_SEPARATOR . 'ephect-master' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'ephect';
 
         $egg = new CommonLib($this->application);
         $egg->displayTree($dir);

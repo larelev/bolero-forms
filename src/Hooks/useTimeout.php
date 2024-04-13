@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Hooks;
+namespace Bolero\Forms\Hooks;
 
 function useTimeout($callback, $ms)
 {
-  useInterval($callback, $ms, 1);
+    useInterval($callback, $ms, 1);
 }

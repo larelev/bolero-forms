@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\RequireMaster;
+namespace Bolero\Forms\Commands\RequireMaster;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommandLib;
@@ -23,30 +23,30 @@ class Lib extends AbstractCommandLib
 
         $master = $libRoot . 'main';
         $filename = $master . '.zip';
-        $boleroDir = $master . DIRECTORY_SEPARATOR . 'framework-main' . DIRECTORY_SEPARATOR . 'Bolero' . DIRECTORY_SEPARATOR . 'Framework' . DIRECTORY_SEPARATOR;
+        $ephectDir = $master . DIRECTORY_SEPARATOR . 'framework-main' . DIRECTORY_SEPARATOR . 'Bolero\Forms' . DIRECTORY_SEPARATOR . 'Framework' . DIRECTORY_SEPARATOR;
 
         $tree = [];
 
         if (!file_exists($filename)) {
-            Console::writeLine('Downloading bolero github main');
+            Console::writeLine('Downloading ephect github main');
             $curl = new Curl();
-            [$code, $header, $content] = $curl->request('https://codeload.github.com/bolero-io/framework/zip/main');
+            [$code, $header, $content] = $curl->request('https://codeload.github.com/ephect-io/framework/zip/main');
 
             file_put_contents($filename, $content);
         }
 
         if (file_exists($filename)) {
-            Console::writeLine('Inflating bolero master archive');
+            Console::writeLine('Inflating ephect master archive');
             $zip = new Zip();
             $zip->inflate($filename);
         }
 
         if (file_exists($filename)) {
-            $tree = Utils::walkTreeFiltered($boleroDir, ['php']);
+            $tree = Utils::walkTreeFiltered($ephectDir, ['php']);
         }
 
         unlink($filename);
-        $result = ['path' => $boleroDir, 'tree' => $tree];
+        $result = ['path' => $ephectDir, 'tree' => $tree];
 
         return (object) $result;
     }

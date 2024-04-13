@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Commands\MakeQuickStart;
+namespace Bolero\Forms\Commands\MakeQuickStart;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 

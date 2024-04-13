@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Error;
+namespace Bolero\Forms\Commands\Error;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;

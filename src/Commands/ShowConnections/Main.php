@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\ShowConnections;
+namespace Bolero\Forms\Commands\ShowConnections;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;

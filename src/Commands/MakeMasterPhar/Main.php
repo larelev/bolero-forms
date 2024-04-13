@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Commands\MakeMasterPhar;
+namespace Bolero\Forms\Commands\MakeMasterPhar;
 
-use Bolero\Apps\Egg\PharLib;
+use Bolero\Forms\Apps\Egg\PharLib;
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 

@@ -2,7 +2,7 @@
 
 namespace Bolero\Forms\Core;
 
-interface StructureInterface 
+interface StructureInterface
 {
-    public function toArray() : array;
+    public function toArray(): array;
 }

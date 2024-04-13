@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Commands\ApplicationTree;
+namespace Bolero\Forms\Commands\ApplicationTree;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 

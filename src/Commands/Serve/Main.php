@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Serve;
+namespace Bolero\Forms\Commands\Serve;
 
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;

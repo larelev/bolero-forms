@@ -7,7 +7,7 @@ use Bolero\Forms\Registry\FrameworkRegistry;
 
 final class UsesAsParser extends AbstractTokenParser
 {
-    public function do(null|string|array $parameter = null) : void
+    public function do(null|string|array $parameter = null): void
     {
         $compNamespace = $this->component->getNamespace();
 
@@ -27,5 +27,5 @@ final class UsesAsParser extends AbstractTokenParser
             ComponentRegistry::write($componentAlias, $fqFunctionName);
         }
     }
-    
+
 }

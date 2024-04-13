@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Commands\MakeSkeleton;
+namespace Bolero\Forms\Commands\MakeSkeleton;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 

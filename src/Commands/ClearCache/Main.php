@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\ClearCache;
+namespace Bolero\Forms\Commands\ClearCache;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;

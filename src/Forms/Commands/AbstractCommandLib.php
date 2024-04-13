@@ -1,4 +1,5 @@
 <?php
+
 namespace Bolero\Forms\Commands;
 
 use Bolero\Forms\CLI\Application;

@@ -3,29 +3,28 @@
 namespace Bolero\Forms\Components\Generators;
 
 use Bolero\Forms\Components\FileComponentInterface;
-use Bolero\Forms\Components\Generators\TokenParsers\ArgumentsParser;
 use Bolero\Forms\Components\Generators\TokenParsers\ArraysParser;
 use Bolero\Forms\Components\Generators\TokenParsers\ChildrenDeclarationParser;
 use Bolero\Forms\Components\Generators\TokenParsers\ChildSlotsParser;
 use Bolero\Forms\Components\Generators\TokenParsers\ClosedComponentsParser;
-use Bolero\Forms\Components\Generators\TokenParsers\EchoParser;
 use Bolero\Forms\Components\Generators\TokenParsers\EmptyComponentsParser;
 use Bolero\Forms\Components\Generators\TokenParsers\FragmentsParser;
 use Bolero\Forms\Components\Generators\TokenParsers\HeredocParser;
+use Bolero\Forms\Components\Generators\TokenParsers\HtmlParser;
 use Bolero\Forms\Components\Generators\TokenParsers\NamespaceParser;
 use Bolero\Forms\Components\Generators\TokenParsers\OpenComponentsParser;
-use Bolero\Forms\Components\Generators\TokenParsers\PhpTagsParser;
 use Bolero\Forms\Components\Generators\TokenParsers\UseEffectParser;
 use Bolero\Forms\Components\Generators\TokenParsers\UsesAsParser;
 use Bolero\Forms\Components\Generators\TokenParsers\UsesParser;
 use Bolero\Forms\Components\Generators\TokenParsers\UseVariablesParser;
-use Bolero\Forms\Components\Generators\TokenParsers\ValuesParser;
+use Bolero\Forms\Components\Generators\TokenParsers\View\InlineCodeParser;
 use Bolero\Forms\Components\Generators\TokenParsers\WebComponentParser;
 use Bolero\Forms\Registry\ComponentRegistry;
 
 class ParserService implements ParserServiceInterface
 {
     protected ?object $component = null;
+    protected array $funcVariables = [];
     protected array $useVariables = [];
     protected array $useTypes = [];
     protected string $html = '';
@@ -34,37 +33,14 @@ class ParserService implements ParserServiceInterface
     protected $openComponentList = [];
     protected $result = null;
 
-    public function getVariables(): ?array
-    {
-        return $this->useVariables;
-    }
-
-    public function getUses(): ?array
-    {
-        return $this->useTypes;
-    }
-
-    public function getResult(): null|string|array|bool
-    {
-        return $this->result;
-    }
-
-    public function getHtml(): string
-    {
-        return $this->html;
-    }
-
     public function getChildren(): ?object
     {
         return $this->children;
     }
 
-    public function doArguments(FileComponentInterface $component): void
+    public function getResult(): null|string|array|bool
     {
-        $p = new ArgumentsParser($component);
-        $p->do();
-
-        $this->result = $p->getResult();
+        return $this->result;
     }
 
     public function doChildSlots(FileComponentInterface $component): void
@@ -75,11 +51,21 @@ class ParserService implements ParserServiceInterface
         $this->result = $p->getResult();
     }
 
+    public function getHtml(): string
+    {
+        return $this->html;
+    }
+
     public function doUses(FileComponentInterface $component): void
     {
         $p = new UsesParser($component);
         $p->do();
         $this->useTypes = array_merge($this->useTypes, $p->getUses());
+    }
+
+    public function getUses(): ?array
+    {
+        return $this->useTypes;
     }
 
     public function doUsesAs(FileComponentInterface $component): void
@@ -96,41 +82,53 @@ class ParserService implements ParserServiceInterface
         $this->html = $p->getHtml();
     }
 
-    public function doPhpTags(FileComponentInterface $component): void
+    public function doHtml(FileComponentInterface $component): void
     {
-        $p = new PhpTagsParser($component);
+        $p = new HtmlParser($component);
         $p->do();
-        $this->html = $p->getHtml();
+        $this->result = $p->getResult();
+    }
+
+    public function doInlineCode(FileComponentInterface $component): void
+    {
+        $this->doHtml($component);
+        $text = $this->result;
+
+        $p = new InlineCodeParser($component);
+        $p->do([
+            "html" => $text,
+            "useVariables" => $this->useVariables,
+        ]);
+        $phtml = $p->getResult();
+
+        $this->html = str_replace($text,  $phtml, $this->html);
+
+        $this->useVariables = $p->getUseVariables();
+        $this->funcVariables = $p->getFuncVariables();
     }
 
     public function doChildrenDeclaration(FileComponentInterface $component): void
     {
         $p = new ChildrenDeclarationParser($component);
         $p->do();
-        $this->children = (object) $p->getResult();
+        $this->children = (object)$p->getResult();
     }
 
-    public function doValues(FileComponentInterface $component): void
+    public function getFuncVariables(): ?array
     {
-        $p = new ValuesParser($component);
-        $p->do($this->useVariables);
-        $this->useVariables = $p->getVariables();
-        $this->html = $p->getHtml();
+        return $this->funcVariables;
     }
 
-    public function doEchoes(FileComponentInterface $component): void
+    public function getUseVariables(): ?array
     {
-        $p = new EchoParser($component);
-        $p->do($this->useVariables);
-        $this->useVariables = $p->getVariables();
-        $this->html = $p->getHtml();
+        return $this->useVariables;
     }
 
     public function doArrays(FileComponentInterface $component): void
     {
         $p = new ArraysParser($component);
         $p->do($this->useVariables);
-        $this->useVariables = $p->getVariables();
+        $this->useVariables = $p->getUseVariables();
         $this->html = $p->getHtml();
     }
 
@@ -141,18 +139,11 @@ class ParserService implements ParserServiceInterface
         $this->html = $p->getHtml();
     }
 
-    public function doUseSlot(FileComponentInterface $component): void
-    {
-        $p = new UseSlotParser($component);
-        $p->do();
-        $this->html = $p->getHtml();
-    }
-
     public function doUseVariables(FileComponentInterface $component): void
     {
         $p = new UseVariablesParser($component);
         $p->do($this->useVariables);
-        $this->useVariables = $p->getVariables();
+        $this->useVariables = $p->getUseVariables();
         $this->html = $p->getHtml();
     }
 
@@ -160,13 +151,13 @@ class ParserService implements ParserServiceInterface
     {
         $p = new WebComponentParser($component);
         $p->do($this->useVariables);
-        $this->useVariables = $p->getVariables();
+        $this->useVariables = $p->getUseVariables();
     }
 
     public function doNamespace(FileComponentInterface $component): void
     {
         $p = new NamespaceParser($component);
-        $p->do();
+        $p->do($component->getMotherUID());
         $this->html = $p->getHtml();
     }
 

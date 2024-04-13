@@ -1,4 +1,5 @@
 <?php
+
 namespace Bolero\Forms\Commands;
 
 interface CommandInterface

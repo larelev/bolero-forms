@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Build;
+namespace Bolero\Forms\Commands\Build;
 
 use Bolero\Forms\Commands\AbstractCommandLib;
 use Bolero\Forms\Core\Builder;
@@ -12,7 +12,7 @@ class Lib extends AbstractCommandLib
     public function build(): void
     {
         $application = $this->parent;
-        
+
         $application->clearRuntime();
         $application->clearLogs();
 
@@ -20,11 +20,7 @@ class Lib extends AbstractCommandLib
         $builder->describeComponents();
         $builder->prepareRoutedComponents();
 
-        // $compiler->performAgain();
-
         $builder->buildAllRoutes();
-
-//        $builder->buildWebcomponents();
     }
 }
 
