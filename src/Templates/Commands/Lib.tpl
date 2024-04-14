@@ -2,7 +2,7 @@
 
 namespace Ephect\Commands\{{CommandNamespace}};
 
-use Ephect\Framework\Commands\AbstractCommandLib;
+use Bolero\Forms\Commands\AbstractCommandLib;
 
 class Lib extends AbstractCommandLib
 {

@@ -76,13 +76,11 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
         $parser->doUsesAs($this);
     }
 
-    public function render(?array $functionArgs = null, ?Request $request = null): string
+    public function render(?array $functionArgs = null, ?Request $request = null): void
     {
         [$fqFunctionName, $cacheFilename] = $this->renderComponent($this->motherUID, $this->function, $functionArgs);
 
-        $html = $this->renderHTML($cacheFilename, $fqFunctionName, $functionArgs, $request);
-
-        return $html;
+        echo $this->renderHTML($cacheFilename, $fqFunctionName, $functionArgs, $request);
     }
 
     public function renderComponent(string $motherUID, string $functionName, ?array $functionArgs = null): array

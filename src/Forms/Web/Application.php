@@ -49,10 +49,15 @@ class Application extends AbstractApplication
     protected function execute(): int
     {
         $app = new Component('App');
-        $this->html = $app->render();
+
+        ob_start();
+        $app->render();
+        $this->html = ob_get_clean();
 
         // $motherUID = $app->getMotherUID();
         // $compiler->buildWebcomponents($motherUID);
+
+        return 0;
     }
 
     public function displayConstants(): array

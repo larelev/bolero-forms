@@ -2,8 +2,8 @@
 
 namespace Ephect\Commands\{{CommandNamespace}};
 
-use Ephect\Framework\Commands\AbstractCommand;
-use Ephect\Framework\Commands\Attributes\CommandDeclaration;
+use Bolero\Forms\Commands\AbstractCommand;
+use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
 #[CommandDeclaration({{CommandAttributes}})]
 #[CommandDeclaration(desc: "{{Description}}")]

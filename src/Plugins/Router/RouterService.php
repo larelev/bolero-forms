@@ -192,7 +192,8 @@ class RouterService implements RouterServiceInterface
 
             if (ComponentRegistry::read($path) === null) {
                 $html = 'Page not found';
-                $html = ($responseCode === 401) ? 'Bad request' : $html;
+                $html = ($responseCode === 400) ? 'Bad request' : $html;
+                $html = ($responseCode === 401) ? 'Unauthorized' : $html;
                 return;
             }
         }

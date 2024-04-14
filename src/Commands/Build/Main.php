@@ -11,8 +11,9 @@ class Main extends AbstractCommand
 {
     public function run(): int
     {
-
         $egg = new Lib($this->application);
         $egg->build();
+
+        return 0;
     }
 }
