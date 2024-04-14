@@ -7,8 +7,8 @@ use Bolero\Forms\Registry\HooksRegistry;
 use Bolero\Forms\Registry\PharRegistry;
 
 define('LIBDIR_SEPARATOR', Phar::running() ? '_' : DIRECTORY_SEPARATOR);
-define('FRAMEWORK_PATH', dirname(__FILE__) . LIBDIR_SEPARATOR . 'Framework' . LIBDIR_SEPARATOR);
-define('HOOKS_PATH', 'Hooks' . LIBDIR_SEPARATOR);
+define('FRAMEWORK_PATH',  dirname(__FILE__) . LIBDIR_SEPARATOR . 'Forms' . LIBDIR_SEPARATOR);
+const HOOKS_PATH = 'Hooks' . LIBDIR_SEPARATOR;
 
 include FRAMEWORK_PATH . 'Core' . LIBDIR_SEPARATOR . 'constants.php';
 include FRAMEWORK_PATH . 'Core' . LIBDIR_SEPARATOR . 'Autoloader.php';
@@ -26,10 +26,6 @@ include FRAMEWORK_PATH . 'Registry' . LIBDIR_SEPARATOR . 'HooksRegistry.php';
 HooksRegistry::register();
 
 FrameworkRegistry::register();
-if (IS_PHAR_APP) {
-    include FRAMEWORK_PATH . 'Registry' . LIBDIR_SEPARATOR . 'PharRegistry.php';
-    PharRegistry::register();
-}
 
 Autoloader::register();
 

@@ -10,11 +10,13 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Display the tree of the Bolero\Forms framework master branch.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $dir = 'master' . DIRECTORY_SEPARATOR . 'ephect-master' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'ephect';
 
         $egg = new CommonLib($this->application);
         $egg->displayTree($dir);
+
+        return 0;
     }
 }

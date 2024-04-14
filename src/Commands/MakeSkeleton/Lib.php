@@ -10,7 +10,7 @@ class Lib extends AbstractCommandLib
 
     public function makeSkeleton(): void
     {
-        $sample = EPHECT_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Skeleton';
+        $sample = BOLERO_FORMS_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Skeleton';
 
         Utils::safeMkDir(SRC_ROOT);
         $destDir = realpath(SRC_ROOT);

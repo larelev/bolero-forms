@@ -61,12 +61,12 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
 
         if ($asArray) {
             $result = TextUtils::jsonToPhpArray($result);
-            $ephect_root = EPHECT_ROOT;
+            $ephect_root = BOLERO_FORMS_ROOT;
             if(DIRECTORY_SEPARATOR === '\\') {
-                $ephect_root = str_replace('\\', '\\\\', EPHECT_ROOT);
+                $ephect_root = str_replace('\\', '\\\\', BOLERO_FORMS_ROOT);
             }
 
-            $result = str_replace('"' . $ephect_root, 'EPHECT_ROOT . "', $result);
+            $result = str_replace('"' . $ephect_root, 'BOLERO_FORMS_ROOT . "', $result);
             $result = str_replace('"' . SRC_ROOT, 'SRC_ROOT . "', $result);
         }
 

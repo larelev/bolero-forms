@@ -20,7 +20,7 @@ class Autoloader
 
     public static function load($className): void
     {
-        $classFilename = (IS_PHAR_APP) ? PharRegistry::read($className) : FrameworkRegistry::read($className);
+        $classFilename = FrameworkRegistry::read($className);
 
         include $classFilename;
     }

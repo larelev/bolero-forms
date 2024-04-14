@@ -108,9 +108,9 @@ class PharLib extends Element
             Console::writeLine('APP_DIR::' . APP_CWD);
             $this->addPharFiles();
 
-            $ephectTree = $this->egg->requireTree(EPHECT_ROOT);
+            $ephectTree = $this->egg->requireTree(BOLERO_FORMS_ROOT);
 
-            // $this->addFileToPhar(EPHECT_ROOT . 'ephect_library.php', "ephect_library.php");
+            // $this->addFileToPhar(BOLERO_FORMS_ROOT . 'ephect_library.php', "ephect_library.php");
 
             foreach ($ephectTree->tree as $file) {
                 $filepath = $ephectTree->path . $file;

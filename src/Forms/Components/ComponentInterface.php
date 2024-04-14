@@ -29,5 +29,5 @@ interface ComponentInterface extends ElementInterface
 
     public function renderComponent(string $motherUID, string $functionName, ?array $functionArgs = null): array;
 
-    public function render(): void;
+    public function render(): string;
 }

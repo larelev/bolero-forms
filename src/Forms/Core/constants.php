@@ -1,14 +1,14 @@
 <?php
 
-$document_root = isset($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR : '';
+//$document_root = isset($_SERVER['DOCUMENT_ROOT']) && !empty($_SERVER['DOCUMENT_ROOT']) ? $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR : '';
 
-define('IS_WEB_APP', $document_root !== '');
-define('IS_PHAR_APP', (\Phar::running() !== ''));
-define('IS_CLI_APP', (\Phar::running() === '') && !IS_WEB_APP);
+//define('IS_WEB_APP', $document_root !== '');
+//define('IS_CLI_APP', (\Phar::running() === '') && !IS_WEB_APP);
+$vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'larelev' . DIRECTORY_SEPARATOR;
 
 if (IS_WEB_APP) {
 
-    define('DOCUMENT_ROOT', $document_root);
+//    define('DOCUMENT_ROOT', $document_root);
 
     $site_root = dirname(DOCUMENT_ROOT) . DIRECTORY_SEPARATOR;
 
@@ -17,18 +17,18 @@ if (IS_WEB_APP) {
 
     define('CONFIG_DIR', SITE_ROOT . 'config' . DIRECTORY_SEPARATOR);
 
-    define('EPHECT_CONFIG', trim(file_get_contents(CONFIG_DIR . 'framework')));
+    define('BOLERO_FORMS_CONFIG', trim(file_get_contents(CONFIG_DIR . 'forms')));
     define('AJIL_CONFIG', trim(file_get_contents(CONFIG_DIR . 'javascripts')));
-    define('EPHECT_ROOT', SITE_ROOT . EPHECT_CONFIG . DIRECTORY_SEPARATOR);
+    define('BOLERO_FORMS_ROOT', SITE_ROOT . BOLERO_FORMS_CONFIG . DIRECTORY_SEPARATOR);
     define('AJIL_ROOT', SITE_ROOT . AJIL_CONFIG . DIRECTORY_SEPARATOR);
 
     $appname = pathinfo(SITE_ROOT, PATHINFO_FILENAME);
     define('APP_NAME', $appname);
 
     define('AJIL_VENDOR_SRC', AJIL_ROOT);
-    define('EPHECT_VENDOR_SRC', EPHECT_ROOT);
-    define('EPHECT_VENDOR_LIB', EPHECT_VENDOR_SRC . 'Framework' . DIRECTORY_SEPARATOR);
-    define('EPHECT_VENDOR_APPS', EPHECT_VENDOR_SRC . 'Apps' . DIRECTORY_SEPARATOR);
+    define('BOLERO_FORMS_VENDOR_SRC', BOLERO_FORMS_ROOT);
+    define('BOLERO_FORMS_VENDOR_LIB', BOLERO_FORMS_VENDOR_SRC . 'Forms' . DIRECTORY_SEPARATOR);
+    define('BOLERO_FORMS_VENDOR_APPS', BOLERO_FORMS_VENDOR_SRC . 'Apps' . DIRECTORY_SEPARATOR);
 
     $rewrite_base = '/';
 
@@ -92,79 +92,41 @@ if (!IS_WEB_APP) {
     $script_root = $script_dir . DIRECTORY_SEPARATOR;
     $src_root = $script_root . 'app' . DIRECTORY_SEPARATOR;
 
-    define('APP_CWD', IS_PHAR_APP ? getcwd() . DIRECTORY_SEPARATOR : str_replace($script_name, '', $app_path));
-
-    define('IS_INNER_APP', false !== strpos(APP_CWD, 'Framework' . DIRECTORY_SEPARATOR . 'Bolero\Forms' . DIRECTORY_SEPARATOR . 'Apps'));
-    define('IS_TASK_APP', false !== strpos(APP_CWD . $script_name, $script_dir . DIRECTORY_SEPARATOR . 'bootstrap.php'));
-    define('IS_BIN_APP', false !== strpos(APP_CWD . $script_name, 'bin' . DIRECTORY_SEPARATOR . $script_name));
-
-    if (IS_INNER_APP) {
-        $script_root = dirname(APP_CWD) . DIRECTORY_SEPARATOR;
-        $src_root = dirname(dirname(dirname($script_root))) . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR;
-
-        $path = explode(DIRECTORY_SEPARATOR, APP_CWD);
-        array_pop($path);
-        array_pop($path);
-        $appName = array_pop($path);
-    } elseif (IS_TASK_APP) {
-        $script_root = '.' . DIRECTORY_SEPARATOR;
-        $src_root = $site_root . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR;
-    } elseif (IS_BIN_APP) {
-        $script_root = '.' . DIRECTORY_SEPARATOR;
-        $src_root = $site_root . DIRECTORY_SEPARATOR . 'app' . DIRECTORY_SEPARATOR;
-    } elseif (IS_PHAR_APP) {
-        $script_root = '.' . DIRECTORY_SEPARATOR;
-        $src_root = APP_CWD . DIRECTORY_SEPARATOR;
-    }
+    define('APP_CWD',  str_replace($script_name, '', $app_path));
 
     define('SRC_ROOT', $src_root);
     define('SCRIPT_ROOT', $script_root);
     define('SITE_ROOT', dirname(SRC_ROOT) . DIRECTORY_SEPARATOR);
 
     define('CONFIG_DIR', SITE_ROOT . 'config' . DIRECTORY_SEPARATOR);
-    define('EPHECT', trim(file_get_contents(CONFIG_DIR . 'framework')));
-    define('EPHECT_ROOT', SITE_ROOT . EPHECT . DIRECTORY_SEPARATOR);
+    define('BOLERO_FORMS', trim(file_get_contents(CONFIG_DIR . 'forms')));
+    define('BOLERO_FORMS_ROOT', SITE_ROOT . BOLERO_FORMS . DIRECTORY_SEPARATOR);
 
-    $vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'ephect-io' . DIRECTORY_SEPARATOR;
-    $portable_dir = 'Epehct' . DIRECTORY_SEPARATOR;
+    $vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'larelev' . DIRECTORY_SEPARATOR;
+    $portable_dir = 'src' . DIRECTORY_SEPARATOR;
     $bootstrap = 'bootstrap.php';
 
-    $ephect_dir = $vendor_dir . 'framework' . DIRECTORY_SEPARATOR . 'Bolero\Forms' . DIRECTORY_SEPARATOR;
+    $bolero_forms_dir = $vendor_dir . 'framework' . DIRECTORY_SEPARATOR . 'Bolero\Forms' . DIRECTORY_SEPARATOR;
     $ajil_dir = $vendor_dir . 'javascripts' . DIRECTORY_SEPARATOR . 'Ajil' . DIRECTORY_SEPARATOR;
-    $ephect_vendor_lib = '';
-    $ephect_vendor_apps = '';
+    $bolero_forms_vendor_lib = '';
+    $bolero_forms_vendor_apps = '';
 
     define('APP_NAME', $appName);
 
-    $ephect_root = \Phar::running();
-
-    if (!IS_PHAR_APP) {
-
-        if (IS_INNER_APP) {
-            if (file_exists(SITE_ROOT . $portable_dir . $bootstrap)) {
-                $ephect_dir = $portable_dir;
-            }
-            $ephect_vendor_lib = $ephect_dir . 'Framework' . DIRECTORY_SEPARATOR;
-            $ephect_vendor_apps = $ephect_dir . 'Apps' . DIRECTORY_SEPARATOR;
-
-            $ephect_root = SITE_ROOT . $ephect_vendor_lib;
-        } else {
-            if (file_exists(SITE_ROOT . $portable_dir . $bootstrap)) {
-                $ephect_dir = $portable_dir;
-            }
-            $ephect_vendor_lib = $ephect_dir . 'Framework' . DIRECTORY_SEPARATOR;
-            $ephect_vendor_apps = $ephect_dir . 'Apps' . DIRECTORY_SEPARATOR;
-
-            $ephect_root = SITE_ROOT . $ephect_vendor_lib;
-        }
+    if (file_exists(SITE_ROOT . $portable_dir . $bootstrap)) {
+        $bolero_dir = $portable_dir;
     }
+    $bolero_vendor_lib = $bolero_forms_dir . 'Forms' . DIRECTORY_SEPARATOR;
+    $bolero_vendor_apps = $bolero_forms_dir . 'Apps' . DIRECTORY_SEPARATOR;
 
-    define('EPHECT_VENDOR_SRC', $ephect_dir);
+    $bolero_root = SITE_ROOT . $bolero_vendor_lib;
+
+    define('BOLERO_FORMS_VENDOR_SRC', $bolero_forms_dir);
     define('AJIL_VENDOR_SRC', $ajil_dir);
-    define('EPHECT_VENDOR_LIB', $ephect_vendor_lib);
-    define('EPHECT_VENDOR_APPS', $ephect_vendor_apps);
+    define('BOLERO_FORMS_VENDOR_LIB', $bolero_forms_vendor_lib);
+    define('BOLERO_FORMS_VENDOR_APPS', $bolero_forms_vendor_apps);
 
-    define('EPHECT_APPS_ROOT', SITE_ROOT . EPHECT_VENDOR_APPS);
+    define('BOLERO_FORMS_APPS_ROOT', SITE_ROOT . BOLERO_FORMS_VENDOR_APPS);
 
     define('REQUEST_URI', 'https://localhost/');
     define('REQUEST_METHOD', 'GET');
@@ -190,10 +152,10 @@ define('RUNTIME_JS_DIR', DOCUMENT_ROOT . REL_RUNTIME_JS_DIR);
 define('RUNTIME_CSS_DIR', DOCUMENT_ROOT . REL_RUNTIME_CSS_DIR);
 
 
-define('EPHECT_VENDOR_WIDGETS', EPHECT_VENDOR_SRC . 'Widgets' . DIRECTORY_SEPARATOR);
-define('EPHECT_VENDOR_PLUGINS', EPHECT_VENDOR_SRC . 'Plugins' . DIRECTORY_SEPARATOR);
-define('EPHECT_WIDGETS_ROOT', SITE_ROOT . EPHECT_VENDOR_WIDGETS);
-define('EPHECT_PLUGINS_ROOT', SITE_ROOT . EPHECT_VENDOR_PLUGINS);
+define('BOLERO_FORMS_VENDOR_WIDGETS', BOLERO_FORMS_VENDOR_SRC . 'Widgets' . DIRECTORY_SEPARATOR);
+define('BOLERO_FORMS_VENDOR_PLUGINS', BOLERO_FORMS_VENDOR_SRC . 'Plugins' . DIRECTORY_SEPARATOR);
+define('BOLERO_FORMS_WIDGETS_ROOT', SITE_ROOT . BOLERO_FORMS_VENDOR_WIDGETS);
+define('BOLERO_FORMS_PLUGINS_ROOT', SITE_ROOT . BOLERO_FORMS_VENDOR_PLUGINS);
 
 define('APP_DIR', 'app' . DIRECTORY_SEPARATOR);
 define('APP_ROOT', SRC_ROOT . APP_DIR);
@@ -224,10 +186,11 @@ define('ERROR_LOG', LOG_PATH . 'error.log');
 define('SQL_LOG', LOG_PATH . 'sql.log');
 define('ROUTES_JSON', RUNTIME_DIR . 'routes.json');
 
-define('FRAMEWORK_ROOT', EPHECT_ROOT . 'Framework' . DIRECTORY_SEPARATOR);
-define('HOOKS_ROOT', EPHECT_ROOT . 'Hooks' . DIRECTORY_SEPARATOR);
-define('PLUGINS_ROOT', EPHECT_ROOT . 'Plugins' . DIRECTORY_SEPARATOR);
-define('COMMANDS_ROOT', EPHECT_ROOT . 'Commands' . DIRECTORY_SEPARATOR);
+define('FRAMEWORK_ROOT', BOLERO_FORMS_ROOT . 'Forms' . DIRECTORY_SEPARATOR);
+define('HOOKS_ROOT', BOLERO_FORMS_ROOT . 'Hooks' . DIRECTORY_SEPARATOR);
+define('PLUGINS_ROOT', BOLERO_FORMS_ROOT . 'Plugins' . DIRECTORY_SEPARATOR);
+define('COMMANDS_ROOT', BOLERO_FORMS_ROOT . 'Commands' . DIRECTORY_SEPARATOR);
+    $bolero_dir = $vendor_dir . 'forms' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR;
 define('CUSTOM_COMMANDS_ROOT', SRC_ROOT . CONFIG_COMMANDS . DIRECTORY_SEPARATOR);
 define('CUSTOM_PAGES_ROOT', SRC_ROOT . CONFIG_PAGES . DIRECTORY_SEPARATOR);
 define('CUSTOM_COMPONENTS_ROOT', SRC_ROOT . CONFIG_COMPONENTS . DIRECTORY_SEPARATOR);

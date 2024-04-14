@@ -20,7 +20,7 @@ class CommonLib extends Element
 
     public function createCommonTrees(): void
     {
-        $common = EPHECT_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Common';
+        $common = BOLERO_FORMS_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Common';
         $src_dir = $common . DIRECTORY_SEPARATOR . 'config';
 
         Utils::safeMkDir(CONFIG_DIR);

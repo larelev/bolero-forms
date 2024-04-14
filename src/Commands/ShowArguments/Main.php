@@ -11,9 +11,11 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 class Main extends AbstractCommand
 {
 
-    public function run(): void
+    public function run(): int
     {
         $data = ['argv' => $this->application->getArgv(), 'argc' => $this->application->getArgc()];
         Console::writeLine($data);
+
+        return 0;
     }
 }

@@ -108,7 +108,9 @@ abstract class AbstractApplication extends Element
         return $token;
     }
 
-    abstract public function run(...$params): void;
+    abstract public function run(...$params): int;
+
+    abstract protected function execute(): int;
 
     abstract public function displayConstants(): array;
 
@@ -224,8 +226,8 @@ abstract class AbstractApplication extends Element
         return PHP_OS;
     }
 
-    protected function execute(): void
-    {
-    }
+//    protected function execute(): int {
+//        return 0;
+//    }
 
 }

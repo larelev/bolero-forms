@@ -30,7 +30,7 @@ class FrameworkRegistry extends AbstractStaticRegistry
     {
         if (!FrameworkRegistry::uncache(true)) {
 
-            $frameworkFiles = Utils::walkTreeFiltered(EPHECT_ROOT, ['php']);
+            $frameworkFiles = Utils::walkTreeFiltered(BOLERO_FORMS_ROOT, ['php']);
 
             foreach ($frameworkFiles as $filename) {
                 if (
@@ -42,27 +42,27 @@ class FrameworkRegistry extends AbstractStaticRegistry
                 }
 
                 if (false !== strpos($filename, 'Interface')) {
-                    list($namespace, $interface) = ElementUtils::getInterfaceDefinitionFromFile(EPHECT_ROOT . $filename);
+                    list($namespace, $interface) = ElementUtils::getInterfaceDefinitionFromFile(BOLERO_FORMS_ROOT . $filename);
                     $fqname = $namespace . '\\' . $interface;
-                    FrameworkRegistry::write($fqname, EPHECT_ROOT . $filename);
+                    FrameworkRegistry::write($fqname, BOLERO_FORMS_ROOT . $filename);
                     continue;
                 }
 
                 if (false !== strpos($filename, 'Trait')) {
-                    list($namespace, $trait) = ElementUtils::getTraitDefinitionFromFile(EPHECT_ROOT . $filename);
+                    list($namespace, $trait) = ElementUtils::getTraitDefinitionFromFile(BOLERO_FORMS_ROOT . $filename);
                     $fqname = $namespace . '\\' . $trait;
-                    FrameworkRegistry::write($fqname, EPHECT_ROOT . $filename);
+                    FrameworkRegistry::write($fqname, BOLERO_FORMS_ROOT . $filename);
                     continue;
                 }
 
-                list($namespace, $class) = ElementUtils::getClassDefinitionFromFile(EPHECT_ROOT . $filename);
+                list($namespace, $class) = ElementUtils::getClassDefinitionFromFile(BOLERO_FORMS_ROOT . $filename);
                 $fqname = $namespace . '\\' . $class;
                 if ($class === '') {
-                    list($namespace, $function) = ElementUtils::getFunctionDefinitionFromFile(EPHECT_ROOT . $filename);
+                    list($namespace, $function) = ElementUtils::getFunctionDefinitionFromFile(BOLERO_FORMS_ROOT . $filename);
                     $fqname = $namespace . '\\' . $function;
                 }
                 if ($fqname !== '\\') {
-                    FrameworkRegistry::write($fqname, EPHECT_ROOT . $filename);
+                    FrameworkRegistry::write($fqname, BOLERO_FORMS_ROOT . $filename);
                 }
             }
 

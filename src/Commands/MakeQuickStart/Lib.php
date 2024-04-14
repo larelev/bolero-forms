@@ -9,7 +9,7 @@ class Lib
 
     public function createQuickstart(): void
     {
-        $sample = EPHECT_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'QuickStart';
+        $sample = BOLERO_FORMS_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'QuickStart';
 
         Utils::safeMkDir(SRC_ROOT);
         $destDir = realpath(SRC_ROOT);

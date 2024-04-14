@@ -167,7 +167,7 @@ class ComponentEntity extends Tree implements ComponentEntityInterface
                 "startsAt": 0,
                 "endsAt": 0,
                 "props": [],
-                "node": false,
+                "node": [],
                 "hasCloser": true,
                 "isSibling": false,
                 "parentId": -1,

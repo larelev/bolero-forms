@@ -9,7 +9,7 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Build the application.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
 
         $egg = new Lib($this->application);

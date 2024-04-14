@@ -40,20 +40,20 @@ class Application extends AbstractApplication
      */
     public function getArgi(int $index, string $default = ''): null|string
     {
-        if ($index > -1 && $this->argc > $index) {
+        if($index > -1 && $this->argc > $index) {
             return $this->argv[$index];
         }
 
         return $default;
     }
 
-    public static function create(...$params): void
+    public static function create(...$params): int
     {
         self::$instance = new Application();
-        self::$instance->run(...$params);
+        return self::$instance->run(...$params);
     }
 
-    public function run(...$params): void
+    public function run(...$params): int
     {
         $this->argv = $params[0];
         $this->argc = $params[1];
@@ -67,7 +67,7 @@ class Application extends AbstractApplication
 
         $this->init();
 
-        $this->execute();
+        return $this->execute();
     }
 
     public function init(): void
@@ -75,11 +75,12 @@ class Application extends AbstractApplication
 
     }
 
-    protected function execute(): void
+    protected function execute(): int
     {
         $commands = new ApplicationCommands($this);
         $runner = new CommandRunner($this, $commands);
-        $runner->run();
+        return $runner->run();
+        
     }
 
     public function displayConstants(): array

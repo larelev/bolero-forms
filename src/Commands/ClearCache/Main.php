@@ -10,9 +10,11 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Clear all cache files.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $data = $this->application->clearRuntime();
         Console::writeLine($data);
+
+        return 0;
     }
 }

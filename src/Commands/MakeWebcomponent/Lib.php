@@ -27,7 +27,7 @@ class Lib extends AbstractCommandLib
 
             $builder->saveManifest($tagName, $className, $entrypoint, $arguments, $destDir);
 
-            $srcDir = EPHECT_ROOT . 'Templates' . DIRECTORY_SEPARATOR . 'WebComponents' . DIRECTORY_SEPARATOR;
+            $srcDir = BOLERO_FORMS_ROOT . 'Templates' . DIRECTORY_SEPARATOR . 'WebComponents' . DIRECTORY_SEPARATOR;
 
             $builder->copyTemplates($tagName, $className, $hasBackendProps, $entrypoint, $arguments, $srcDir, $destDir);
 
