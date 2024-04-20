@@ -1,14 +1,22 @@
 <?php
 
-namespace Bolero\Plugins\Route;
+namespace Bolero\Forms\Plugins\Route;
 
 use Bolero\Forms\Components\Builders\AbstractBuilder;
+use Bolero\Forms\Components\Children;
+use Bolero\Forms\Registry\CodeRegistry;
+use Bolero\Forms\Registry\ComponentRegistry;
+use Bolero\Framework\Logger\Logger;
+use stdClass;
 
 class RouteBuilder extends AbstractBuilder
 {
+    private Children|null $children = null;
 
     public function __construct(object $props)
     {
+
+
         parent::__construct($props, RouteStructure::class);
     }
 
@@ -34,37 +42,38 @@ class RouteBuilder extends AbstractBuilder
         $translated = $rule;
 
         $c = count($matches);
-        for($i = 0; $i < $c; $i++) {
+        for ($i = 0; $i < $c; $i++) {
             $match = preg_quote($matches[$i][0]);
-            $argn = $i+1;
+            $argn = $i + 1;
             $translated = preg_replace('/' . $match . '/m', '\\$' . $argn, $translated, 1);
         }
 
         if ($translated === $rule && $translated !== '/') {
 
-            $re = '/([^\w]*)(\w+)(.*)/m';
+            $re = '/(\W*)(\w+)(.*)/m';
             $subst = '/$2';
 
             $translated = preg_replace($re, $subst, $rule);
 
-            if ($translated === $rule) {
-                return $route;
-            }
+            /**
+             * TODO: watch out how it behaves in more use cases
+             */
+//             if ($translated === $rule) {
+//                 return $route;
+//             }
         }
 
         $struct = new RouteStructure([
-            'method' => $route->getMethod(), 
+            'method' => $route->getMethod(),
             'rule' => $rule,
             'normalized' => $rule,
-            'redirect' => $route->getRedirect(), 
+            'redirect' => $route->getRedirect(),
             'translation' => $translated,
             'error' => $route->getError(),
             'exact' => $route->isExact()
         ]);
 
-        $newRoute = new RouteEntity($struct);
-
-        return $newRoute;
+        return new RouteEntity($struct);
     }
 
     private function translateNamedArgumentsRoute(RouteInterface $route): RouteInterface
@@ -72,7 +81,7 @@ class RouteBuilder extends AbstractBuilder
 
         $rule = $route->getRule();
 
-        $re = '/(\([\w]+\))/m';
+        $re = '/(\(\w+\))/m';
         $subst = '(\\\\S+)';
 
         $normalized = preg_replace($re, $subst, $rule);
@@ -81,16 +90,16 @@ class RouteBuilder extends AbstractBuilder
             return $route;
         }
 
-        $re = '/([^\(]+)?(\/\(([\w\-]+)\))/m';
+        $re = '/([^(]+)?(\/\(([\w\-]+)\))/m';
         preg_match_all($re, $rule, $matches, PREG_SET_ORDER, 0);
 
         $translated = $rule;
 
         $c = count($matches);
-        for($i = 0; $i < $c; $i++) {
-            $argn = $i+1;
+        for ($i = 0; $i < $c; $i++) {
+            $argn = $i + 1;
             $match = preg_quote($matches[$i][2]);
-            $subst = ($i === 0 ? '?':'&') . $matches[$i][3] . '=\\$' . $argn;
+            $subst = ($i === 0 ? '?' : '&') . $matches[$i][3] . '=\\$' . $argn;
             $translated = preg_replace('@' . $match . '@m', $subst, $translated, 1);
         }
 
@@ -104,9 +113,7 @@ class RouteBuilder extends AbstractBuilder
             'exact' => $route->isExact()
         ]);
 
-        $newRoute = new RouteEntity($struct);
-
-        return $newRoute;
+        return new RouteEntity($struct);
     }
 
 }

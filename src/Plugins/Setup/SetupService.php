@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Plugins\Setup;
+namespace Bolero\Forms\Plugins\Setup;
 
 use Bolero\Forms\Core\PhpInfo;
 use Bolero\Forms\IO\Utils;
@@ -10,11 +10,6 @@ use Bolero\Forms\Web\Curl;
 class SetupService
 {
     private $_rewriteBase = '/';
-
-    public static function create(): SetupService
-    {
-        return new SetupService();
-    }
 
     public function __construct()
     {
@@ -92,6 +87,11 @@ class SetupService
         return $ok;
     }
 
+    public static function create(): SetupService
+    {
+        return new SetupService();
+    }
+
     public function fixRewritBase(): ?string
     {
         $result = null;
@@ -129,9 +129,9 @@ class SetupService
     {
         $ok = false;
 
-        $vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'bolero-io' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR;
+        $vendor_dir = 'vendor' . DIRECTORY_SEPARATOR . 'ephect-io' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR . 'framework' . DIRECTORY_SEPARATOR;
         $portable_dir = 'framework' . DIRECTORY_SEPARATOR;
-        $lib = 'bolero' . DIRECTORY_SEPARATOR . 'bootstrap.php';
+        $lib = 'ephect' . DIRECTORY_SEPARATOR . 'bootstrap.php';
 
         $framework_dir = 'framework';
         if (file_exists(SITE_ROOT . $vendor_dir . $lib)) {
@@ -193,7 +193,7 @@ BOOTSTRAP2;
 <?php
 include 'bootstrap.php';
 
-Bolero\Web\Application::create();
+Bolero\Forms\Web\Application::create();
 
 INDEX;
 

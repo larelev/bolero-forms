@@ -4,10 +4,10 @@ namespace Bolero\Forms\Components\Generators\TokenParsers;
 
 final class ArraysParser extends AbstractTokenParser
 {
-    public function do(null|string|array $parameter = null): void
+    public function do(null|string|array|object $parameter = null): void
     {
         $this->useVariables = $parameter;
-        
+
         $re = '/\{\{ \.\.\.([a-z0-9_\-\>]*) \}\}/m';
         $str = $this->html;
 
@@ -29,7 +29,7 @@ final class ArraysParser extends AbstractTokenParser
             }
 
             $this->html = str_replace('{{ ...' . $variable . ' }}', '<?php echo print_r($' . $variable . ', true) ?>', $this->html);
-        }       
+        }
     }
-    
+
 }

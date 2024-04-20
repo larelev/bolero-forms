@@ -4,10 +4,10 @@ namespace Bolero\Forms\Components\Generators\TokenParsers;
 
 final class ArgumentsParser extends AbstractTokenParser
 {
-    public function do(null|string|array $parameter = null): void
+    public function do(null|string|array|object $parameter = null): void
     {
         $componentArgs = $parameter;
-        
+
         $re = '/([A-Za-z0-9_-]+)(\[\])?=(\"([\S ][^"]*)\"|\'([\S]*)\'|\{\{ ([\w]*) \}\}|\{([\S ]*)\})/m';
 
         preg_match_all($re, $componentArgs, $matches, PREG_SET_ORDER, 0);
@@ -26,5 +26,5 @@ final class ArgumentsParser extends AbstractTokenParser
             }
         }
     }
-    
+
 }

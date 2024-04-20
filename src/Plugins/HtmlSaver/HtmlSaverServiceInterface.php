@@ -1,12 +1,15 @@
 <?php
 
-namespace Bolero\Plugins\HtmlSaver;
+namespace Bolero\Forms\Plugins\HtmlSaver;
 
 interface HtmlSaveServiceInterface
 {
     public function canRender(): bool;
+
     public function isPending(): bool;
+
     public function markAsPending(): void;
+
     public function storeHTML(string $html): void;
 
 }

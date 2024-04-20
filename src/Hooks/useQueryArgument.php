@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Hooks;
+namespace Bolero\Forms\Hooks;
 
 function useQueryArgument($arg, $default = ''): string
 {

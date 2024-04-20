@@ -1,16 +1,19 @@
 <?php
 
-namespace Bolero\Plugins\Router;
+namespace Bolero\Forms\Plugins\Router;
 
 use Bolero\Forms\Components\Component;
-use Bolero\Forms\IO\Utils;
-use Bolero\Plugins\Route\RouteEntity;
-use Bolero\Plugins\Route\RouteInterface;
+use Bolero\Forms\Plugins\Route\RouteStructure;
+use Bolero\Forms\Web\Request;
+use Bolero\Forms\Plugins\Route\RouteEntity;
+use Bolero\Forms\Plugins\Route\RouteInterface;
 use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\HttpErrorRegistry;
 use Bolero\Forms\Registry\RouteRegistry;
 
-use function Bolero\Hooks\useState;
+use Bolero\Framework\Utils\File;
+use Bolero\Framework\Utils\Text;
+use function Bolero\Forms\Hooks\useState;
 
 class RouterService implements RouterServiceInterface
 {
@@ -20,154 +23,6 @@ class RouterService implements RouterServiceInterface
         RouteRegistry::uncache();
         HttpErrorRegistry::uncache();
     }
-
-    public function findRoute(string &$html): void
-    {
-        $html = '';
-        [$state, $setState] = useState();
-
-        if (!isset($state->routes)) {
-            return;
-        }
-
-        $responseCode = 404;
-        $query = [];
-
-        $c = count($state->routes);
-
-        for ($i = 0; $i < $c; $i++) {
-            $route = $state->routes[$i];
-            $path = $route->path;
-            $query = $route->query;
-            $error = $route->error;
-            $responseCode = $route->code;
-
-            if ($responseCode === 200) {
-                $i = $c;
-            }
-        }
-
-        $this->renderRoute($responseCode === 200, $path, $query, $error, $responseCode, $html);
-    }
-
-    public function renderRoute(bool $pageFound, string $path, array $query, int $error, int $responseCode, string &$html): void
-    {
-        if (!$pageFound) {
-            http_response_code($responseCode);
-            $path = HttpErrorRegistry::read($responseCode);
-
-            if (ComponentRegistry::read($path) === null) {
-                $html = 'Page not found';
-                $html = ($responseCode === 401) ? 'Bad request' : $html;
-                return;
-            }
-        }
-
-        $comp = new Component($path);
-        $comp->render($query);
-    }
-
-    public function doRouting(): ?array
-    {
-        if (!IS_WEB_APP) {
-            return null;
-        }
-
-        $json = file_get_contents(CACHE_DIR . 'routes.json');
-        $routes = json_decode($json);
-        $method = REQUEST_METHOD;
-        $methodRoutes = !isset($routes->$method) ? null : $routes->$method;
-
-        if (null === $methodRoutes) {
-            return null;
-        }
-
-        $redirect = '';
-        $parameters = [];
-
-        foreach ($methodRoutes as $rule => $stuff) {
-
-            $redirect = $stuff->redirect;
-            $translation = $stuff->translate;
-            $isExact = $stuff->exact;
-            $error = $stuff->error;
-
-            [$redirect, $parameters, $code] = $this->matchRouteEx($method, $rule, $redirect, $translation, $isExact);
-
-            if ($code !== 200) {
-                continue;
-            }
-
-            break;
-        }
-
-        return [$redirect, $parameters, $error, $code];
-    }
-
-    private function matchRouteEx(string $method, string $rule, string $redirect, string $translation, bool $isExact): ?array
-    {
-        if ($method !== REQUEST_METHOD) {
-            return [$redirect, [], 401];
-        }
-
-        $prefix = '@';
-        $suffix = '@su';
-
-        if ($isExact) {
-            $prefix = $prefix . '^';
-            $suffix = '$' . $suffix;
-        }
-
-        // $request_uri = \preg_replace('@' . $rule . '@', $redirect, REQUEST_URI);
-        preg_match($prefix . $rule  . $suffix, REQUEST_URI, $matches);
-        $request_uri = !isset($matches[0]) ? '' : $matches[0][0];
-
-
-        if ($request_uri === '') {
-            return [$redirect, [], 404];
-        }
-
-        if ($translation !== '') {
-            $request_uri = preg_replace($prefix . $rule . $suffix, $translation, REQUEST_URI);
-        }
-
-        $baseurl = parse_url(SERVER_HOST . $request_uri);
-
-        $parameters = [];
-
-        if (isset($baseurl['query'])) {
-            parse_str($baseurl['query'], $parameters);
-        }
-
-        return [$redirect, $parameters, 200];
-    }
-
-    public function addRoute(RouteInterface $route): void
-    {
-        $methodRegistry = RouteRegistry::read($route->getMethod()) ?: [];
-
-        if (!array_key_exists($route->getRule(), $methodRegistry)) {
-            $methodRegistry[$route->getRule()] = [
-                'rule' => $route->getRule(),
-                'redirect' => $route->getRedirect(),
-                'normal' => $route->getNormalized(),
-                'translate' => $route->getTranslation(),
-                'error' => $route->getError(),
-                'exact' => $route->isExact(),
-            ];
-            RouteRegistry::write($route->getMethod(), $methodRegistry);
-        }
-
-        if (($error = $route->getError()) !== 0) {
-            HttpErrorRegistry::write($error, $route->getRedirect());
-        }
-    }
-
-    public function saveRoutes(): bool
-    {
-        return RouteRegistry::cache() && HttpErrorRegistry::cache();
-    }
-
 
     public static function findRouteArguments(string $route): ?array
     {
@@ -251,7 +106,7 @@ class RouterService implements RouterServiceInterface
 
         sort($allroutes);
 
-        $finalRoute = (object) $allroutes[0];
+        $finalRoute = (object)$allroutes[0];
 
         $result = $finalRoute->redirect;
 
@@ -284,9 +139,9 @@ class RouterService implements RouterServiceInterface
 
         sort($allroutes);
 
-        $finalRoute = (object) $allroutes[0];
+        $finalRoute = (object)$allroutes[0];
         if ($finalRoute->rule === $finalRoute->normal) {
-            $queryString =  str_replace("\\", "", $finalRoute->translate);
+            $queryString = str_replace("\\", "", $finalRoute->translate);
 
             return $queryString;
         }
@@ -303,6 +158,189 @@ class RouterService implements RouterServiceInterface
         return $queryString;
     }
 
+    public function findRoute(string &$html): void
+    {
+        $html = '';
+        [$state, $setState] = useState();
+
+        if (!isset($state->routes)) {
+            return;
+        }
+
+        $responseCode = 404;
+        $query = [];
+
+        $c = count($state->routes);
+
+        for ($i = 0; $i < $c; $i++) {
+            $route = $state->routes[$i];
+            $path = $route->path;
+            $query = $route->query;
+            $error = $route->error;
+            $responseCode = $route->code;
+            $middlewares = $route->middlewares;
+
+            if ($responseCode === 200) {
+                $i = $c;
+            }
+        }
+
+        $this->renderRoute($responseCode === 200, $path, $query, $error, $responseCode, $middlewares, $html);
+    }
+
+    public function renderRoute(bool $pageFound, string $path, array $query, int $error, int $responseCode, array $middlewares, string &$html): void
+    {
+        if (!$pageFound) {
+            http_response_code($responseCode);
+            $path = HttpErrorRegistry::read($responseCode);
+
+            if (ComponentRegistry::read($path) === null) {
+                $html = 'Page not found';
+                $html = ($responseCode === 400) ? 'Bad request' : $html;
+                $html = ($responseCode === 401) ? 'Unauthorized' : $html;
+                return;
+            }
+        }
+
+        $request = new Request();
+
+        if(count($middlewares)) {
+            foreach ($middlewares as $middleware) {
+                call_user_func($middleware);
+            }
+        }
+        $comp = new Component($path);
+        $comp->render($query, $request);
+    }
+
+    public function doRouting(): ?array
+    {
+        if (!IS_WEB_APP) {
+            return null;
+        }
+
+        $routes = require RouteRegistry::getMovedPhpFilename();
+        $method = REQUEST_METHOD;
+        $methodRoutes = !isset($routes[$method]) ? null : $routes[$method];
+
+        if (null === $methodRoutes) {
+            return null;
+        }
+
+        $redirect = '';
+        $parameters = [];
+
+        foreach ($methodRoutes as $rule => $settings) {
+
+            $stuff = (object) $settings;
+            $redirect = $stuff->redirect;
+            $translation = $stuff->translate;
+            $isExact = $stuff->exact;
+            $error = $stuff->error;
+            $middlewares = $stuff->middlewares;
+
+            [$redirect, $parameters, $code] = $this->matchRouteEx($method, $rule, $redirect, $translation, $isExact);
+
+            if ($code !== 200) {
+                continue;
+            }
+
+            break;
+        }
+
+        return [$redirect, $parameters, $error, $code, $middlewares];
+    }
+
+    private function matchRouteEx(string $method, string $rule, string $redirect, string $translation, bool $isExact): ?array
+    {
+        if ($method !== REQUEST_METHOD) {
+            return [$redirect, [], 401];
+        }
+
+        $prefix = '@';
+        $suffix = '@su';
+
+        if ($isExact) {
+            $prefix = $prefix . '^';
+            $suffix = '$' . $suffix;
+        }
+
+        // $request_uri = \preg_replace('@' . $rule . '@', $redirect, REQUEST_URI);
+        preg_match($prefix . $rule . $suffix, REQUEST_URI, $matches);
+        $request_uri = !isset($matches[0]) ? '' : $matches[0][0];
+
+
+        if ($request_uri === '') {
+            return [$redirect, [], 404];
+        }
+
+        if ($translation !== '') {
+            $request_uri = preg_replace($prefix . $rule . $suffix, $translation, REQUEST_URI);
+        }
+
+        $baseurl = parse_url(SERVER_HOST . $request_uri);
+
+        $parameters = [];
+
+        if (isset($baseurl['query'])) {
+            parse_str($baseurl['query'], $parameters);
+        }
+
+        return [$redirect, $parameters, 200];
+    }
+
+    public function addRoute(RouteInterface $route): void
+    {
+        $methodRegistry = RouteRegistry::read($route->getMethod()) ?: [];
+        if (array_key_exists($route->getRule(), $methodRegistry)) {
+            $currentRoute = $methodRegistry[$route->getRule()];
+            $middlewares = $currentRoute['middlewares'];
+
+            if(!empty($middlewares)) {
+                $methodRegistry[$route->getRule()] = [
+                    'rule' => $route->getRule(),
+                    'redirect' => $route->getRedirect(),
+                    'normal' => $route->getNormalized(),
+                    'translate' => $route->getTranslation(),
+                    'error' => $route->getError(),
+                    'exact' => $route->isExact(),
+                    'middlewares' => $middlewares,
+                ];
+                RouteRegistry::write($route->getMethod(), $methodRegistry);
+            }
+        }
+
+        if (!array_key_exists($route->getRule(), $methodRegistry)) {
+            $methodRegistry[$route->getRule()] = [
+                'rule' => $route->getRule(),
+                'redirect' => $route->getRedirect(),
+                'normal' => $route->getNormalized(),
+                'translate' => $route->getTranslation(),
+                'error' => $route->getError(),
+                'exact' => $route->isExact(),
+                'middlewares' =>$route->getMiddlewares(),
+            ];
+            RouteRegistry::write($route->getMethod(), $methodRegistry);
+        }
+
+
+        if (($error = $route->getError()) !== 0) {
+            HttpErrorRegistry::write($error, $route->getRedirect());
+        }
+    }
+
+    public function saveRoutes(): bool
+    {
+        return RouteRegistry::cache() && HttpErrorRegistry::cache();
+    }
+
+    public function moveCache()
+    {
+        $json = File::safeRead(RouteRegistry::getCacheFilename());
+        $phpRoutes = Text::jsonToPhpReturnedArray($json);
+        File::safeWrite(RouteRegistry::getMovedPhpFilename(), $phpRoutes);
+        rename(RouteRegistry::getCacheFilename(), RouteRegistry::getMovedFilename());
+    }
 
     public function matchRoute(RouteEntity $route): ?array
     {
@@ -311,7 +349,9 @@ class RouterService implements RouterServiceInterface
             $route->getRule(),
             $route->getRedirect(),
             $route->getTranslation(),
-            $route->isExact()
+            $route->isExact(),
         );
     }
+
+
 }

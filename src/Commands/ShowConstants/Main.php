@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Constants;
+namespace Bolero\Forms\Commands\Constants;
 
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
@@ -10,9 +10,11 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 class Main extends AbstractCommand
 {
 
-    public function run(): void
+    public function run(): int
     {
         $lib = new Lib($this->application);
         $lib->displayConstants();
+
+        return 0;
     }
 }

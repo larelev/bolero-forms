@@ -1,15 +1,29 @@
 <?php
 
-namespace Ephect\Plugins\Route;
+namespace Bolero\Forms\Plugins\Route;
 
-use Ephect\Plugins\Router\RouterService;
+use Bolero\Forms\Components\Children;
+use Bolero\Forms\Plugins\Router\RouterService;
 
-use function Ephect\Hooks\useEffect;
-use function Ephect\Hooks\useState;
+use Bolero\Framework\Logger\Logger;
+use stdClass;
+use function Bolero\Forms\Hooks\useEffect;
+use function Bolero\Forms\Hooks\useState;
 
-function Route($props)
+function Route($children)
 {
-    useEffect(function ($props, /* bool */ $onError, /* string */ $html) {
+    useEffect(function ($children, /* bool */ $onError, /* string */ $html) {
+
+        $props = $children;
+        if(method_exists($children, "props")) {
+            $args = $children->props();
+
+            $props = new stdClass;
+            foreach ($args as $field => $value) {
+                $props->{$field} = urldecode($value);
+            }
+        }
+
         $routeBuilder = new RouteBuilder($props);
         $route = $routeBuilder->build();
 
@@ -28,7 +42,7 @@ function Route($props)
         [$state, $setState] = useState();
         $routes = isset($state->routes) ? $state->routes : [];
 
-        array_push($routes, ['path' => $path, 'query' => $query, 'error' => $error, 'code' => $code, ]);
+        array_push($routes, ['path' => $path, 'query' => $query, 'error' => $error, 'code' => $code,]);
         useState(['routes' => $routes]);
 
     });

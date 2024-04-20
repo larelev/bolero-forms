@@ -2,14 +2,13 @@
 
 namespace Bolero\Forms\CLI;
 
-use Bolero\Commands\Constants\Lib;
+use Bolero\Forms\Commands\Constants\Lib;
 use Bolero\Forms\Commands\ApplicationCommands;
 use Bolero\Forms\Commands\CommandRunner;
 use Bolero\Forms\Core\AbstractApplication;
 
 class Application extends AbstractApplication
 {
-    private $_phar = null;
     protected array $argv = [];
     protected int $argc = 0;
 
@@ -48,27 +47,19 @@ class Application extends AbstractApplication
         return $default;
     }
 
-    public function init(): void
-    {
-
-    }
-
-    public static function create(...$params): void
+    public static function create(...$params): int
     {
         self::$instance = new Application();
-        self::$instance->run(...$params);
+        return self::$instance->run(...$params);
     }
 
-    public function run(...$params): void
+    public function run(...$params): int
     {
-        $argv = $params[0];
-        $argc = $params[1];
-
-        $this->argv = $argv;
-        $this->argc = $argc;
+        $this->argv = $params[0];
+        $this->argc = $params[1];
 
         $this->appDirectory = APP_CWD;
-        
+
         $this->loadInFile();
 
         self::setExecutionMode(Application::PROD_MODE);
@@ -76,15 +67,19 @@ class Application extends AbstractApplication
 
         $this->init();
 
-        $this->execute();
+        return $this->execute();
+    }
+
+    public function init(): void
+    {
 
     }
 
-    protected function execute(): void
+    protected function execute(): int
     {
         $commands = new ApplicationCommands($this);
         $runner = new CommandRunner($this, $commands);
-        $runner->run();
+        return $runner->run();
         
     }
 

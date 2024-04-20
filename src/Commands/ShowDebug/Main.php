@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Debug;
+namespace Bolero\Forms\Commands\Debug;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;
@@ -10,9 +10,11 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Display the debug log.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $data = $this->application->getDebugLog();
         Console::writeLine($data);
+
+        return 0;
     }
 }

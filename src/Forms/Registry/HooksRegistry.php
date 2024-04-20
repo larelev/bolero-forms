@@ -28,35 +28,22 @@ class HooksRegistry
 
     protected function _register(): void
     {
-        if (!IS_PHAR_APP) {
 
-            $hooks = [];
-            $dir_handle = opendir(BOLERO_ROOT . HOOKS_PATH);
-        
-            while (false !== $filename = readdir($dir_handle)) {
-                if ($filename == '.' || $filename == '..') {
-                    continue;
-                }
-        
-                array_push($hooks, str_replace(DIRECTORY_SEPARATOR, '_' , HOOKS_PATH . $filename));
-        
-                include BOLERO_ROOT . HOOKS_PATH . $filename;
+        $hooks = [];
+        $dir_handle = opendir(BOLERO_FORMS_ROOT . HOOKS_PATH);
+
+        while (false !== $filename = readdir($dir_handle)) {
+            if ($filename == '.' || $filename == '..') {
+                continue;
             }
-        
-            $hooksRegistry = ['Hooks' => $hooks];
-        
-            Utils::safeWrite(RUNTIME_DIR . 'HooksRegistry.json',  json_encode($hooksRegistry));
+
+            array_push($hooks, str_replace(DIRECTORY_SEPARATOR, '_' , HOOKS_PATH . $filename));
+
+            include BOLERO_FORMS_ROOT . HOOKS_PATH . $filename;
         }
-        
-        if (IS_PHAR_APP) {
-            $hooksRegistry = Utils::safeRead(RUNTIME_DIR . 'HooksRegistry.json');
-        
-            $hooks = json_decode($hooksRegistry);
-            $hooks = $hooks->hooks;
-            
-            foreach($hooks as $hook) {
-                include $hook;
-            }
-        }
+
+        $hooksRegistry = ['Hooks' => $hooks];
+
+        Utils::safeWrite(RUNTIME_DIR . 'HooksRegistry.json',  json_encode($hooksRegistry));
     }
 }

@@ -8,7 +8,8 @@ class PharRegistry extends AbstractStaticRegistry
 {
     private static $instance = null;
 
-    public static function reset(): void { 
+    public static function reset(): void
+    {
         self::$instance = new PharRegistry;
         self::$instance->_setCacheDirectory(RUNTIME_DIR);
         unlink(self::$instance->getCacheFilename());
@@ -29,9 +30,9 @@ class PharRegistry extends AbstractStaticRegistry
         FrameworkRegistry::uncache(true);
         $items = FrameworkRegistry::items();
 
-        foreach($items as $key => $value) {
+        foreach ($items as $key => $value) {
 
-            $value = str_replace(BOLERO_ROOT, '', $value);
+            $value = str_replace(BOLERO_FORMS_ROOT, '', $value);
             $value = str_replace(DIRECTORY_SEPARATOR, '_', $value);
 
             PharRegistry::write($key, $value);

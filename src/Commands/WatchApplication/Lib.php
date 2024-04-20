@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\WatchApplication;
+namespace Bolero\Forms\Commands\WatchApplication;
 
 use Bolero\Forms\Commands\AbstractCommandLib;
 use Bolero\Forms\Components\FileSystem\Watcher;

@@ -1,8 +1,8 @@
 <?php
 
-namespace Ephect\Plugins\HtmlSaver;
+namespace Bolero\Forms\Plugins\HtmlSaver;
 
-use function Ephect\Hooks\useEffect;
+use function Bolero\Forms\Hooks\useEffect;
 
 function HtmlSaver($children)
 {
@@ -11,15 +11,15 @@ function HtmlSaver($children)
     });
 
     return (<<< HTML
-        {? if({service}->canRender()) { ?}
+        @if %service->canRender() do
         {{ children }}
-        {? } ?}
-        {? 
-            if(!{service}->isPending()) {
-                {service}->markAsPending();
-                {@html} = { children };
-                {service}->storeHTML({@html});
+        @done
+        <% 
+            if(!%service->isPending()) {
+                %service->markAsPending();
+                %html = { children };
+                %service->storeHTML(%html);
             }
-        ?}
+        %>
     HTML);
 }

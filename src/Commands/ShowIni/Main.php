@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Ini;
+namespace Bolero\Forms\Commands\Ini;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;
@@ -11,9 +11,12 @@ use Bolero\Forms\Registry\StateRegistry;
 #[CommandDeclaration(desc: "Display the ini file if exists")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $this->application->loadInFile();
         $data = StateRegistry::item('ini');
-        Console::writeLine($data);    }
+        Console::writeLine($data);
+
+        return 0;
+    }
 }

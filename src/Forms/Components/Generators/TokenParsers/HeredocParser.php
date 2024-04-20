@@ -4,7 +4,7 @@ namespace Bolero\Forms\Components\Generators\TokenParsers;
 
 final class HeredocParser extends AbstractTokenParser
 {
-    public function do(null|string|array $parameter = null): void
+    public function do(null|string|array|object $parameter = null): void
     {
         $re = '/(<<<[ ]*(HTML|html))/';
 
@@ -12,7 +12,7 @@ final class HeredocParser extends AbstractTokenParser
 
         $str = $this->html;
 
-        $this->html = preg_replace($re, $subst, $str);       
+        $this->html = preg_replace($re, $subst, $str);
     }
-    
+
 }

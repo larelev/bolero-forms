@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Plugins\WebComponent;
+namespace Bolero\Forms\Plugins\WebComponent;
 
 use Bolero\Forms\Components\ChildrenInterface;
 use Bolero\Forms\IO\Utils;
@@ -31,15 +31,15 @@ class WebComponentService implements WebComponentServiceInterface
     public function getBody(string $tag): ?string
     {
         $uid = '';
-        if(!isset($this->children->props()->slot)) {
+        if (!isset($this->children->props()->slot)) {
             $uid = $this->children->getUID();
         } else {
-            if(method_exists($this->children->props()->slot, 'getUID')) {
+            if (method_exists($this->children->props()->slot, 'getUID')) {
                 $uid = $this->children->props()->slot->getUID();
-            } 
-            if(isset($this->children->props()->slot->uid)) {
+            }
+            if (isset($this->children->props()->slot->uid)) {
                 $uid = $this->children->props()->slot->uid;
-            } 
+            }
         }
         $muid = $this->children->getMotherUID();
         $name = $this->children->getName();
@@ -68,10 +68,11 @@ class WebComponentService implements WebComponentServiceInterface
     {
         $name = $this->children->getName();
 
-        $runtimeDir = strtolower(RUNTIME_JS_DIR . $name) . DIRECTORY_SEPARATOR;
+        $runtimeDir = RUNTIME_JS_DIR . $name . DIRECTORY_SEPARATOR;
         Utils::safeMkDir($runtimeDir);
-        $finalJs = $runtimeDir . $name . MJS_EXTENSION;
+        $finalJs = $runtimeDir . $name . JS_EXTENSION;
         $classJs = $name . CLASS_MJS_EXTENSION;
+        $elementJs = $name . "Element" . JS_EXTENSION;
 
         $parser = new Parser($html);
         $parser->doTags();
@@ -79,12 +80,13 @@ class WebComponentService implements WebComponentServiceInterface
 
         Utils::safeWrite($finalJs, $script);
         copy(CUSTOM_WEBCOMPONENTS_ROOT . $name . DIRECTORY_SEPARATOR . $classJs, $runtimeDir . $classJs);
+        copy(CUSTOM_WEBCOMPONENTS_ROOT . $name . DIRECTORY_SEPARATOR . $elementJs, $runtimeDir . $elementJs);
 
-        if(file_exists(CUSTOM_WEBCOMPONENTS_ROOT . $name . DIRECTORY_SEPARATOR  . "lib")) {
-            $libFiles = Utils::walkTreeFiltered(CUSTOM_WEBCOMPONENTS_ROOT . $name . DIRECTORY_SEPARATOR  . "lib");
+        if (file_exists(CUSTOM_WEBCOMPONENTS_ROOT . $name . DIRECTORY_SEPARATOR . "lib")) {
+            $libFiles = Utils::walkTreeFiltered(CUSTOM_WEBCOMPONENTS_ROOT . $name . DIRECTORY_SEPARATOR . "lib");
             Utils::safeMkDir($runtimeDir . 'lib');
-            foreach($libFiles as $filename) {
-                copy(CUSTOM_WEBCOMPONENTS_ROOT . $name . DIRECTORY_SEPARATOR  . 'lib' . $filename, $runtimeDir . 'lib' . $filename);
+            foreach ($libFiles as $filename) {
+                copy(CUSTOM_WEBCOMPONENTS_ROOT . $name . DIRECTORY_SEPARATOR . 'lib' . $filename, $runtimeDir . 'lib' . $filename);
             }
         }
     }

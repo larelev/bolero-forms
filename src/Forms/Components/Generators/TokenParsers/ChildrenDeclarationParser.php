@@ -4,7 +4,7 @@ namespace Bolero\Forms\Components\Generators\TokenParsers;
 
 final class ChildrenDeclarationParser extends AbstractTokenParser
 {
-    public function do(null|string|array $parameter = null): void
+    public function do(null|string|array|object $parameter = null): void
     {
         $subject = $this->html;
 
@@ -17,9 +17,9 @@ final class ChildrenDeclarationParser extends AbstractTokenParser
             $componentName = $match[2];
             $variable = $match[7];
 
-            $this->result = ['declaration' => $functionDeclaration, 'component' => $componentName, 'variable'=>$variable];
+            $this->result = ['declaration' => $functionDeclaration, 'component' => $componentName, 'variable' => $variable];
         }
 
     }
-    
+
 }

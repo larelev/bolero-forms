@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\ClearLogs;
+namespace Bolero\Forms\Commands\ClearLogs;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;
@@ -10,9 +10,11 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Clear all logs.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $data = $this->application->clearLogs();
         Console::writeLine($data);
+
+        return 0;
     }
 }

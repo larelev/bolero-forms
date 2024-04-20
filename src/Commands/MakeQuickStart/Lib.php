@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\MakeQuickStart;
+namespace Bolero\Forms\Commands\MakeQuickStart;
 
 use Bolero\Forms\IO\Utils;
 
@@ -9,7 +9,7 @@ class Lib
 
     public function createQuickstart(): void
     {
-        $sample = BOLERO_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'QuickStart';
+        $sample = BOLERO_FORMS_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'QuickStart';
 
         Utils::safeMkDir(SRC_ROOT);
         $destDir = realpath(SRC_ROOT);

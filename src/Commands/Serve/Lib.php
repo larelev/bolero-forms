@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Commands\Serve;
+namespace Bolero\Forms\Commands\Serve;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\CLI\ConsoleColors;
 use Bolero\Forms\CLI\System\Command;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\MakeSkeleton;
+namespace Bolero\Forms\Commands\MakeSkeleton;
 
 use Bolero\Forms\Commands\AbstractCommandLib;
 use Bolero\Forms\IO\Utils;
@@ -10,7 +10,7 @@ class Lib extends AbstractCommandLib
 
     public function makeSkeleton(): void
     {
-        $sample = BOLERO_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Skeleton';
+        $sample = BOLERO_FORMS_ROOT . 'Samples' . DIRECTORY_SEPARATOR . 'Skeleton';
 
         Utils::safeMkDir(SRC_ROOT);
         $destDir = realpath(SRC_ROOT);

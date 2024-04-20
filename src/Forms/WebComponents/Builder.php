@@ -4,15 +4,16 @@ namespace Bolero\Forms\WebComponents;
 
 use Bolero\Forms\IO\Utils;
 use Exception;
+use function Bolero\Forms\Hooks\useEffect;
 
 class Builder
 {
 
-     /**
+    /**
      * Second creation step of the WebComponent
      *
      * Create a manifest file include all details passed to the command line
-     * 
+     *
      * @param string $tagName
      * @param string $className
      * @param string $entrypoint
@@ -36,7 +37,7 @@ class Builder
 
     /**
      * Third and last creation step of the WebComponent
-     * 
+     *
      * Read templates text, replace the markups and save into user application directory
      *
      * @param string $tagName
@@ -47,38 +48,64 @@ class Builder
      * @param string $destDir
      * @return void
      */
-    function copyTemplates(string $tagName, string $className, string $entrypoint, array $arguments, string $srcDir, string $destDir): void
+    function copyTemplates(string $tagName, string $className, bool $hasBackendProps, string $entrypoint, array $arguments, string $srcDir, string $destDir): void
     {
 
-        $classText = Utils::safeRead($srcDir . 'Base.class.mjs');
-        $classText = str_replace('Base', $className, $classText);
-        $classText = str_replace('entrypoint', $entrypoint, $classText);
-        Utils::safeWrite($destDir . "$className.class.mjs", $classText);
+        $classText = Utils::safeRead($srcDir . 'Base.class.tpl');
+        $classText = str_replace('{{Base}}', $className, $classText);
+        $classText = str_replace('{{entrypoint}}', $entrypoint, $classText);
 
-        $componentText = Utils::safeRead($srcDir . 'Base.phtml');
-        $componentText = str_replace('Base', $className, $componentText);
-        $componentText = str_replace('<TagName />', $tagName, $componentText);
-        $componentText = str_replace('<Entrypoint />', $entrypoint, $componentText);
+        $componentText = Utils::safeRead($srcDir . 'Base.tpl');
+        $componentText = str_replace('{{Base}}', $className, $componentText);
+        $componentText = str_replace('{{tag-name}}', $tagName, $componentText);
+        $componentText = str_replace('{{entrypoint}}', $entrypoint, $componentText);
 
-        if(count($arguments) > 0) {
-            $properties = '';
-            foreach($arguments as $property) {
-                $properties .= <<< HTML
-                    this.$property\n
+        $baseElementText =   Utils::safeRead($srcDir . 'BaseElement.tpl');
+        $baseElementText = str_replace('{{Base}}', $className, $baseElementText);
+
+        $parameters = $arguments;
+        $arguments[] = 'styles';
+        $arguments[] = 'classes';
+
+        if (count($arguments) == 0) {
+            $classText = str_replace('({{DeclaredAttributes}})', "()", $classText);
+
+            $baseElementText = str_replace('{{GetAttributes}}', '', $baseElementText);
+            $componentText = str_replace('{{Attributes}}', '', $componentText);
+
+            Utils::safeWrite($destDir . "$className.class.mjs", $classText);
+            Utils::safeWrite($destDir . "$className.phtml", $componentText);
+            Utils::safeWrite($destDir . $className . "Element.js", $baseElementText);
+
+            return;
+        }
+
+        $properties = '';
+        foreach ($arguments as $property) {
+            $properties .= <<< HTML
+                this.$property\n
                 HTML;
-                $properties .= '            ';
-            }
+            $properties .= '            ';
+        }
 
-            $componentText = str_replace('<Properties />', $properties, $componentText);
+        $baseElementText = str_replace('{{Properties}}', $properties, $baseElementText);
 
-            $attributes = array_map(function($item) {
-                return "'$item'";
-            }, $arguments);
+        $attributes = array_map(function ($item) {
+            return "'$item'";
+        }, $arguments);
 
-            $attributes = implode(", ", $attributes);
+        $thisParameters = array_map(function ($item) {
+            return "this." . $item;
+        }, $parameters);
 
-            $observeAttributes = <<< HTML
-            static get observeAttributes() {
+        $declaredAttributes = implode(", ", $parameters);
+        $attributes = implode(", ", $attributes);
+
+        $argumentListAndResult = $thisParameters;
+        $thisAttributeList = implode(", ", $thisParameters);
+
+        $observeAttributes = <<< HTML
+                static get observeAttributes() {
                         /**
                         * Attributes passed inline to the component
                         */
@@ -86,23 +113,53 @@ class Builder
                     }
             HTML;
 
-            $componentText = str_replace('<ObserveAttributes />', $observeAttributes, $componentText);
+        $baseElementText = str_replace('{{ObserveAttributes}}', $observeAttributes, $baseElementText);
 
-            $getAttributes = '';
-            foreach($arguments as $attribute) {
-                $getAttributes .= <<< HTML
-                get $attribute() {
+        $getAttributes = '';
+        foreach ($arguments as $attribute) {
+            $getAttributes .= <<< HTML
+                    get $attribute() {
                             return this.getAttribute('$attribute') ?? null
                         }\n
                 HTML;
-                $getAttributes .= '        ';
+            $getAttributes .= '    ';
+        }
 
+        $classText = str_replace('({{DeclaredAttributes}})', "(" . $declaredAttributes . ")", $classText);
+
+        $baseElementText = str_replace('{{GetAttributes}}', $getAttributes, $baseElementText);
+        $componentText = str_replace('{{AttributeList}}', $thisAttributeList, $componentText);
+
+        Utils::safeWrite($destDir . "$className.class.mjs", $classText);
+        Utils::safeWrite($destDir . $className . "Element.js", $baseElementText);
+
+        if ($hasBackendProps) {
+            $namespace = CONFIG_NAMESPACE;
+
+            $componentText = str_replace("</template>", "    <h2>{{ foo }}</h2>\n</template>", $componentText);
+            $componentText = <<< COMPONENT
+            <?php
+            namespace $namespace;
+
+            use function Bolero\Forms\Hooks\useEffect;
+
+            function $className(\$slot) {
+
+            useEffect(function (\$slot, /* string */ \$foo) {
+                \$foo = "It works!"; 
+            });
+
+            return (<<< HTML
+            <WebComponent>
+            $componentText
+            </WebComponent>
+            HTML);
             }
-
-            $componentText = str_replace('<GetAttributes />', $getAttributes, $componentText);
-
+            
+            COMPONENT;
         }
 
         Utils::safeWrite($destDir . "$className.phtml", $componentText);
+
     }
 }

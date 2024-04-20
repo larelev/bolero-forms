@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\WatchApplication;
+namespace Bolero\Forms\Commands\WatchApplication;
 
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
@@ -9,9 +9,11 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Watch the application.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $egg = new Lib($this->application);
         $egg->watch();
+
+        return 0;
     }
 }

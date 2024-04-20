@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Commands\ApplicationTree;
+namespace Bolero\Forms\Commands\ApplicationTree;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
@@ -10,7 +10,7 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Display the tree of the current application.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $egg = new CommonLib($this->application);
         $egg->displayTree(APP_DIR);

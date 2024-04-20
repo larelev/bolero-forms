@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Commands\FrameworkTree;
+namespace Bolero\Forms\Commands\FrameworkTree;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
@@ -11,10 +11,12 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Display the tree of the Bolero framework.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
-        Console::writeLine(BOLERO_ROOT);
+        Console::writeLine(BOLERO_FORMS_ROOT);
         $egg = new CommonLib($this->application);
-        $egg->displayTree(BOLERO_ROOT);
+        $egg->displayTree(BOLERO_FORMS_ROOT);
+
+        return 0;
     }
 }

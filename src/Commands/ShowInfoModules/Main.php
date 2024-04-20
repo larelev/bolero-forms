@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\InfoModules;
+namespace Bolero\Forms\Commands\InfoModules;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;
@@ -11,10 +11,12 @@ use Bolero\Forms\Core\PhpInfo;
 #[CommandDeclaration(desc: "Display the module section of phpinfo() output.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $info = new PhpInfo;
         $data = $info->getModulesSection(true);
         Console::writeLine($data);
+
+        return 0;
     }
 }

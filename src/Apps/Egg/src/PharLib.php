@@ -1,11 +1,14 @@
 <?php
 
-namespace Bolero\Apps\Egg;
+namespace Bolero\Forms\Apps\Egg;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\CLI\Application;
+use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Element;
 use Bolero\Forms\IO\Utils;
+use Bolero\Forms\Utils\Zip;
+use Bolero\Forms\Web\Curl;
 use Phar;
 
 class PharLib extends Element
@@ -13,6 +16,7 @@ class PharLib extends Element
 
     private EggLib $egg;
     private Phar $phar;
+
     /**
      * Constructor
      */
@@ -22,6 +26,12 @@ class PharLib extends Element
 
         $this->egg = new CommonLib($parent);
 
+    }
+
+    public function makeMasterPhar(): void
+    {
+        $ephectTree = $this->requireMaster();
+        $this->_makePhar($ephectTree);
     }
 
     public function requireMaster(): object
@@ -36,47 +46,31 @@ class PharLib extends Element
 
         $master = $libRoot . 'master';
         $filename = $master . '.zip';
-        $boleroDir = $master . DIRECTORY_SEPARATOR . 'bolero-master' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'bolero' . DIRECTORY_SEPARATOR;
+        $ephectDir = $master . DIRECTORY_SEPARATOR . 'ephect-master' . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'ephect' . DIRECTORY_SEPARATOR;
 
         $tree = [];
 
         if (!file_exists($filename)) {
-            Console::writeLine('Downloading bolero github master');
+            Console::writeLine('Downloading ephect github master');
             $curl = new Curl();
-            $result = $curl->request('https://codeload.github.com/CodePhoenixOrg/bolero/zip/master');
+            $result = $curl->request('https://codeload.github.com/CodePhoenixOrg/ephect/zip/master');
             file_put_contents($filename, $result->content);
         }
 
         if (file_exists($filename)) {
-            Console::writeLine('Inflating bolero master archive');
+            Console::writeLine('Inflating ephect master archive');
             $zip = new Zip();
             $zip->inflate($filename);
         }
 
         if (file_exists($master)) {
-            $tree = Utils::walkTree($boleroDir, ['php']);
+            $php = ['php'];
+            $tree = Utils::walkTree($ephectDir, $php);
         }
 
-        $result = ['path' => $boleroDir, 'tree' => $tree];
+        $result = ['path' => $ephectDir, 'tree' => $tree];
 
-        return (object) $result;
-    }
-
-    public function addFileToPhar($file, $name): void
-    {
-        Console::writeLine("Adding %s", $name);
-        $this->phar->addFile($file, $name);
-    }
-
-    public function makeMasterPhar(): void
-    {
-        $boleroTree = $this->requireMaster();
-        $this->_makePhar($boleroTree);
-    }
-
-    public function makeVendorPhar(): void
-    {
-        $this->_makePhar();
+        return (object)$result;
     }
 
     private function _makePhar(): void
@@ -114,37 +108,37 @@ class PharLib extends Element
             Console::writeLine('APP_DIR::' . APP_CWD);
             $this->addPharFiles();
 
-            $boleroTree = $this->egg->requireTree(BOLERO_ROOT);
+            $ephectTree = $this->egg->requireTree(BOLERO_FORMS_ROOT);
 
-            // $this->addFileToPhar(BOLERO_ROOT . 'bolero_library.php', "bolero_library.php");
+            // $this->addFileToPhar(BOLERO_FORMS_ROOT . 'ephect_library.php', "ephect_library.php");
 
-            foreach ($boleroTree->tree as $file) {
-                $filepath = $boleroTree->path . $file;
+            foreach ($ephectTree->tree as $file) {
+                $filepath = $ephectTree->path . $file;
                 $filepath = realpath($filepath);
                 $filename = str_replace(DIRECTORY_SEPARATOR, '_', $file);
- 
+
                 $this->addFileToPhar($filepath, $filename);
             }
 
             // $hooksTree = $this->_requireTree(HOOKS_ROOT);
-         
+
             // foreach ($hooksTree->tree as $file) {
             //     $filepath = $hooksTree->path . $file;
             //     $filepath = realpath($filepath);
             //     $filename = str_replace(DIRECTORY_SEPARATOR, '_', $file);
- 
+
             //     $this->addFileToPhar($filepath, $filename);
             // }
-            
+
             // $pluginsTree = $this->_requireTree(PLUGINS_ROOT);
-         
+
             // foreach ($pluginsTree->tree as $file) {
             //     $filepath = $pluginsTree->path . $file;
             //     $filepath = realpath($filepath);
             //     $filename = str_replace(DIRECTORY_SEPARATOR, '_', $file);
- 
+
             //     $this->addFileToPhar($filepath, $filename);
-            // } 
+            // }
 
             // Create a custom stub to add the shebang
             $execHeader = "#!/usr/bin/env php \n";
@@ -186,6 +180,17 @@ class PharLib extends Element
         } catch (\Throwable $ex) {
             Console::error($ex);
         }
+    }
+
+    public function addFileToPhar($file, $name): void
+    {
+        Console::writeLine("Adding %s", $name);
+        $this->phar->addFile($file, $name);
+    }
+
+    public function makeVendorPhar(): void
+    {
+        $this->_makePhar();
     }
 
 }

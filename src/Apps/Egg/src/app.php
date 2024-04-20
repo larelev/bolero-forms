@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Apps\Egg;
+namespace Bolero\Forms\Apps\Egg;
 
 use Bolero\Forms\CLI\Application;
 

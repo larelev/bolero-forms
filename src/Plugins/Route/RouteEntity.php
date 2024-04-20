@@ -1,11 +1,11 @@
 <?php
 
-namespace Bolero\Plugins\Route;
+namespace Bolero\Forms\Plugins\Route;
 
-use Bolero\Forms\Element;
 use Bolero\Forms\ElementTrait;
+use Bolero\Forms\Entity\Entity;
 
-class RouteEntity extends Element implements RouteInterface
+class RouteEntity extends Entity implements RouteInterface
 {
     use ElementTrait;
 
@@ -16,6 +16,7 @@ class RouteEntity extends Element implements RouteInterface
     private string $translation = '';
     private int $error = 0;
     private bool $exact = false;
+    private array $middlewares = [];
 
     public function __construct(RouteStructure $struct)
     {
@@ -24,8 +25,9 @@ class RouteEntity extends Element implements RouteInterface
         $this->normalized = $struct->normalized;
         $this->redirect = $struct->redirect;
         $this->translation = $struct->translation;
-        $this->error = (int) $struct->error;
+        $this->error = (int)$struct->error;
         $this->exact = $struct->exact !== 'true' ?: true;
+        $this->middlewares = $struct->middlewares;
 
     }
 
@@ -63,4 +65,11 @@ class RouteEntity extends Element implements RouteInterface
     {
         return $this->exact;
     }
- }
+
+    public function getMiddlewares(): array
+    {
+        return $this->middlewares;
+    }
+
+
+}

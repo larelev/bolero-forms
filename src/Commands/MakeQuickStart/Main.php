@@ -1,8 +1,8 @@
 <?php
 
-namespace Bolero\Commands\MakeQuickStart;
+namespace Bolero\Forms\Commands\MakeQuickStart;
 
-use Bolero\Commands\CommonLib;
+use Bolero\Forms\Commands\CommonLib;
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 
@@ -10,12 +10,14 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Create the quickstart application tree.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $egg = new CommonLib($this->application);
         $egg->createCommonTrees();
 
         $lib = new Lib($this->application);
         $lib->createQuickstart();
+
+        return 0;
     }
 }

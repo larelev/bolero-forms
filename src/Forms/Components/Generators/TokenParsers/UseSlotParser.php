@@ -15,7 +15,7 @@ final class UseSlotParser extends AbstractTokenParser
 
     private string $text = '';
 
-    public function do(null|string|array $parameter = null): void
+    public function do(null|string|array|object $parameter = null): void
     {
         if (!strpos($this->html, 'useSlot')) {
             return;
@@ -24,11 +24,11 @@ final class UseSlotParser extends AbstractTokenParser
         $this->doTranslation($parameter);
         $this->doDeclaration($parameter);
     }
-    
+
     private function doTranslation(null|string|array $parameter = null): void
     {
         $re = '/useSlot\(function[ ]*\(((\$props|\$children),[ ]*)?((\s|.*?)+)\)[ ]+(use[ ]*\(((\s|.*?)+)\)[ ]*)?{((\s|.*?)+)}\);/m';
-            
+
         $str = $this->html;
         preg_match_all($re, $str, $matches, PREG_SET_ORDER, 0);
 
@@ -76,7 +76,7 @@ final class UseSlotParser extends AbstractTokenParser
 
         if ($declVars === true) {
             $this->result = '';
-            return;            
+            return;
         }
 
         $this->useVariables = $declVars;
@@ -85,7 +85,7 @@ final class UseSlotParser extends AbstractTokenParser
         $decl2 = "";
 
         $useEffect = <<< USEFFECT
-        \Bolero\Hooks\useEffect(function() use ($match1) { $match2 });
+        \Bolero\Forms\Hooks\useEffect(function() use ($match1) { $match2 });
         USEFFECT;
 
         $this->result = [

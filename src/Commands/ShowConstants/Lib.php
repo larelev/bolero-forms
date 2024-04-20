@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Constants;
+namespace Bolero\Forms\Commands\Constants;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\CLI\ConsoleColors;
@@ -19,8 +19,7 @@ class Lib extends AbstractCommandLib
             $constants['SCRIPT_ROOT'] = SCRIPT_ROOT;
             $constants['SRC_ROOT'] = SRC_ROOT;
             $constants['SITE_ROOT'] = SITE_ROOT;
-            $constants['IS_PHAR_APP'] = IS_PHAR_APP ? 'TRUE' : 'FALSE';
-            $constants['BOLERO_ROOT'] = BOLERO_ROOT;
+            $constants['BOLERO_FORMS_ROOT'] = BOLERO_FORMS_ROOT;
 
             // $constants['BOLERO_VENDOR_SRC'] = BOLERO_VENDOR_SRC;
             // $constants['BOLERO_VENDOR_LIB'] = BOLERO_VENDOR_LIB;

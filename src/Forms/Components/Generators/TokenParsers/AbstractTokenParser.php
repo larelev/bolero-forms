@@ -12,6 +12,7 @@ abstract class AbstractTokenParser implements TokenParserInterface
     protected ?string $html = '';
     protected ?FileComponentInterface $component = null;
     protected string|array|bool|null $result = null;
+    protected array $funcVariables = [];
     protected array $useVariables = [];
     protected array $useTypes = [];
     protected ?ParserServiceInterface $parent = null;
@@ -33,7 +34,12 @@ abstract class AbstractTokenParser implements TokenParserInterface
         return $this->result;
     }
 
-    public function getVariables(): ?array
+    public function getFuncVariables(): ?array
+    {
+        return $this->funcVariables;
+    }
+
+    public function getUseVariables(): ?array
     {
         return $this->useVariables;
     }
@@ -42,7 +48,7 @@ abstract class AbstractTokenParser implements TokenParserInterface
     {
         return $this->useTypes;
     }
-    
+
     public function doCache(): bool
     {
         return CodeRegistry::cache();
@@ -54,5 +60,5 @@ abstract class AbstractTokenParser implements TokenParserInterface
         return CodeRegistry::uncache();
     }
 
-    abstract public function do(null|string|array $parameter = null): void;
+    abstract public function do(null|string|array|object $parameter = null): void;
 }

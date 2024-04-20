@@ -6,22 +6,22 @@ namespace Bolero\Forms\Components\FileSystem;
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\IO\Utils;
 
-use function Bolero\Hooks\useInterval;
+use function Bolero\Forms\Hooks\useInterval;
 
-class Watcher 
+class Watcher
 {
     public function watch(string $directory, array $filter): void
     {
         $mtimes = [];
 
-        useInterval(function() use($directory, $filter, &$mtimes) {
+        useInterval(function () use ($directory, $filter, &$mtimes) {
             $files = $this->_listFiles($directory, $filter);
 
-            foreach($files as $filename) {
-                
+            foreach ($files as $filename) {
+
                 $mtime = filemtime($directory . $filename);
 
-                if(isset($mtimes[$filename]) && $mtimes[$filename] < $mtime ) {
+                if (isset($mtimes[$filename]) && $mtimes[$filename] < $mtime) {
                     Console::writeLine('File "%s" was modified', $directory . $filename);
                 }
                 $mtimes[$filename] = $mtime;

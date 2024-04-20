@@ -13,14 +13,22 @@ use Bolero\Forms\Registry\StateRegistry;
 
 class Application extends AbstractApplication
 {
+    private string $html = '';
 
-    public static function create(...$params): void
+    public function getHtml(): string
+    {
+        return $this->html;
+    }
+
+    public static function create(...$params): self
     {
         self::$instance = new Application();
         self::$instance->run(...$params);
+
+        return self::$instance;
     }
 
-    public function run(...$params): void
+    public function run(...$params): int
     {
         $this->loadInFile();
         $compiler = new Builder;
@@ -33,12 +41,23 @@ class Application extends AbstractApplication
         CacheRegistry::uncache();
         PluginRegistry::uncache();
 
+        $this->execute();
+
+        return 0;
+    }
+
+    protected function execute(): int
+    {
         $app = new Component('App');
+
+        ob_start();
         $app->render();
-        
+        $this->html = ob_get_clean();
+
         // $motherUID = $app->getMotherUID();
         // $compiler->buildWebcomponents($motherUID);
 
+        return 0;
     }
 
     public function displayConstants(): array
@@ -48,7 +67,7 @@ class Application extends AbstractApplication
         $constants['DOCUMENT_ROOT'] = DOCUMENT_ROOT;
         $constants['HTTP_PROTOCOL'] = HTTP_PROTOCOL;
         $constants['SRC_ROOT'] = SRC_ROOT;
-        $constants['BOLERO_ROOT'] = BOLERO_ROOT;
+        $constants['BOLERO_FORMS_ROOT'] = BOLERO_FORMS_ROOT;
         $constants['APP_NAME'] = APP_NAME;
         $constants['APP_ROOT'] = APP_ROOT;
         $constants['CONTROLLER_ROOT'] = CONTROLLER_ROOT;
@@ -83,13 +102,14 @@ class Application extends AbstractApplication
 
         StateRegistry::write('console', 'buffer', $constants);
 
-        Console::writeLine('Application constants are :');
+        Console::Log('Application constants are :');
         foreach ($constants as $key => $value) {
-            Console::writeLine($key . ' => ' . $value);
+            Console::Log($key . ' => ' . $value);
         }
 
         return $constants;
     }
 
-  
+
+
 }

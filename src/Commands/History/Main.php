@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\History;
+namespace Bolero\Forms\Commands\History;
 
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommand;
@@ -10,9 +10,11 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Display the commands history.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
         $history = readline_list_history();
         Console::writeLine($history);
+
+        return 0;
     }
 }

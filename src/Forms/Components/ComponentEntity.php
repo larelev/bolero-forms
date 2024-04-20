@@ -3,6 +3,8 @@
 namespace Bolero\Forms\Components;
 
 use Bolero\Forms\ElementTrait;
+use Bolero\Forms\IO\Utils;
+use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Tree\Tree;
 
 /**
@@ -29,6 +31,7 @@ class ComponentEntity extends Tree implements ComponentEntityInterface
     protected string $method = '';
     protected string $compName = '';
     protected ?string $className = '';
+    protected bool $isSingle = false;
 
     public function __construct(protected ?ComponentStructure $attributes)
     {
@@ -54,20 +57,133 @@ class ComponentEntity extends Tree implements ComponentEntityInterface
         $this->properties = $this->hasProperties ? $attributes->props : [];
         $this->hasCloser = is_array($attributes->closer);
         $this->closer = $this->hasCloser ? $attributes->closer : null;
+        $this->isSingle = $attributes->isSingle;
 
         $this->elementList = (false === $attributes->node) ? [] : $attributes->node;
 
         $this->bindNode();
     }
 
+    public function bindNode(): void
+    {
+        if ($this->elementList === false || $this->elementList === null) {
+            return;
+        }
+
+        $this->elementList = array_map(function ($child) {
+            return new ComponentEntity(new ComponentStructure($child));
+        }, $this->elementList);
+    }
+
+    public static function buildFromArray(?array $list): ?ComponentEntity
+    {
+        $result = null;
+
+        if ($list === null) {
+            return null;
+        }
+
+        $depthIds = static::listIdsByDepth($list);
+
+        $c = count($list);
+
+        for ($j = 0; $j < $c; $j++) {
+            $i = $depthIds[$j];
+            if ($list[$i]['parentId'] === -1) {
+                continue;
+            }
+            $pId = $list[$i]['parentId'];
+
+            if (!is_array($list[$pId]['node'])) {
+                $list[$pId]['node'] = [];
+            }
+            $list[$pId]['node'][] = $list[$i];
+            unset($list[$i]);
+        }
+
+        if (count($list) === 1) {
+            $result = new ComponentEntity(new ComponentStructure($list[0]));
+        } elseif (count($list) > 1) {
+            $result = self::_makeFragment();
+            foreach ($list as $item) {
+                $entity = new ComponentEntity(new ComponentStructure($item));
+                $result->add($entity);
+            }
+        }
+
+        return $result;
+    }
+
+    private static function listIdsByDepth(?array $list): ?array
+    {
+        if ($list === null) {
+            return null;
+        }
+
+        $result = [];
+
+        $depths = [];
+
+        foreach ($list as $match) {
+
+            $struct = new ComponentStructure($match);
+            $depths[$struct->depth] = 1;
+        }
+
+        $maxDepth = count($depths);
+        for ($i = $maxDepth; $i > -1; $i--) {
+            foreach ($list as $match) {
+                if ($match["depth"] == $i) {
+                    $result[] = $match['id'];
+                }
+            }
+        }
+
+        return $result;
+    }
+
+    private static function _makeFragment(): ComponentEntityInterface
+    {
+        $json = <<<JSON
+            {
+                "closer": {
+                    "id": 1,
+                    "parentId": 0,
+                    "text": "<\/>",
+                    "startsAt": 0,
+                    "endsAt": 0,
+                    "contents": {
+                        "startsAt": 0,
+                        "endsAt": 0
+                    }
+                },
+                "uid": "00000000-0000-0000-0000-000000000000",
+                "id": 0,
+                "name": "FakeFragment",
+                "class": null,
+                "component": "Bolero\Forms",
+                "text": "<>",
+                "method": "echo",
+                "startsAt": 0,
+                "endsAt": 0,
+                "props": [],
+                "node": [],
+                "hasCloser": true,
+                "isSibling": false,
+                "parentId": -1,
+                "depth": 0
+            }
+        JSON;
+
+        $fragment = json_decode($json, JSON_OBJECT_AS_ARRAY);
+
+        return new ComponentEntity(new ComponentStructure($fragment));
+
+    }
+
     public function getParentId(): int
     {
         return $this->parentId;
-    }
-
-    public function getName(): string
-    {
-        return $this->name;
     }
 
     public function getText(): string
@@ -115,74 +231,6 @@ class ComponentEntity extends Tree implements ComponentEntityInterface
         return $this->end;
     }
 
-    private static function listIdsByDepth(?array $list): ?array
-    {
-        if ($list === null) {
-            return null;
-        }
-
-        $result = [];
-
-        $depths = [];
-
-        foreach ($list as $match) {
-
-            $struct = new ComponentStructure($match);
-            $depths[$struct->depth] = 1;
-        }
-
-        $maxDepth = count($depths);
-        for ($i = $maxDepth; $i > -1; $i--) {
-            foreach ($list as $match) {
-                if ($match["depth"] == $i) {
-                    $result[] = $match['id'];
-                }
-            }
-        }
-
-        return $result;
-    }
-
-    public static function buildFromArray(?array $list): ?ComponentEntity
-    {
-        $result = null;
-
-        if ($list === null) {
-            return null;
-        }
-
-        $depthIds = static::listIdsByDepth($list);
-
-        $c = count($list);
-
-        for ($j = 0; $j < $c; $j++) {
-            $i = $depthIds[$j];
-            if ($list[$i]['parentId'] === -1) {
-                continue;
-            }
-            $pId = $list[$i]['parentId'];
-
-            if (!is_array($list[$pId]['node'])) {
-                $list[$pId]['node'] = [];
-            }
-            $list[$pId]['node'][] = $list[$i];
-            unset($list[$i]);
-        }
-
-        if (count($list) === 1) {
-            $result = new ComponentEntity(new ComponentStructure($list[0]));
-        }
-        elseif (count($list) > 1) {
-            $result = self::_makeFragment();
-            foreach ($list as $item) {
-                $entity = new ComponentEntity(new ComponentStructure($item));
-                $result->add($entity);
-            }
-        }
-
-        return $result;
-    }
-
     public function composedOf(): array
     {
         $names = [];
@@ -195,15 +243,9 @@ class ComponentEntity extends Tree implements ComponentEntityInterface
         return $names;
     }
 
-    public function bindNode(): void
+    public function getName(): string
     {
-        if ($this->elementList === false || $this->elementList === null) {
-            return;
-        }
-
-        $this->elementList = array_map(function ($child) {
-            return new ComponentEntity(new ComponentStructure($child));
-        }, $this->elementList);
+        return $this->name;
     }
 
     public function toArray(): array
@@ -225,57 +267,54 @@ class ComponentEntity extends Tree implements ComponentEntityInterface
         return null;
     }
 
-    public function getInnerHTML(): string 
+    public function getInnerHTML(): string
     {
         $result = '';
 
-        if(!isset($this->closer['contents']['text'])) {
+        if (!isset($this->closer['contents']['text'])) {
             return $result;
         }
 
         $result = $this->closer['contents']['text'];
         $result = substr($result, 9);
-        $result = base64_decode($result);
 
-        return $result;
+        return base64_decode($result);
     }
 
-    private static function _makeFragment(): ComponentEntityInterface
+    public function getContents(?string $html = null): ?string
     {
-        $json = <<<JSON
-            {
-                "closer": {
-                    "id": 1,
-                    "parentId": 0,
-                    "text": "<\/>",
-                    "startsAt": 0,
-                    "endsAt": 0,
-                    "contents": {
-                        "startsAt": 0,
-                        "endsAt": 0
-                    }
-                },
-                "uid": "00000000-0000-0000-0000-000000000000",
-                "id": 0,
-                "name": "FakeFragment",
-                "class": null,
-                "component": "Bolero",
-                "text": "<>",
-                "method": "echo",
-                "startsAt": 0,
-                "endsAt": 0,
-                "props": [],
-                "node": false,
-                "hasCloser": true,
-                "isSibling": false,
-                "parentId": -1,
-                "depth": 0
-            }
-        JSON;
+        if ($this->name === 'WebComponent') {
+            return $this->getInnerHTML();
+        }
 
-        $fragment = json_decode($json, JSON_OBJECT_AS_ARRAY);
+        $result = '';
 
-        return new ComponentEntity(new ComponentStructure($fragment));
+        if (!$this->hasCloser) {
+            return $result;
+        }
 
+        $contents = $this->closer['contents'];
+        $start = $contents['startsAt'];
+        $end = $contents['endsAt'];
+
+        if ($end - $start < 1) {
+            return $result;
+        }
+
+        ComponentRegistry::uncache();
+        $compFile = ComponentRegistry::read($this->compName);
+        if ($compFile === null) {
+            return $result;
+        }
+        $text = $html ?: Utils::safeRead(COPY_DIR . $compFile);
+
+        if (($pos = strpos($text, $this->text) + strlen($this->text)) > $start) {
+            $offset =  $pos - $start;
+
+            $start += $offset;
+            $end += $offset;
+        }
+
+        return substr($text, $start, $end - $start + 1);
     }
 }

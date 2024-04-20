@@ -14,13 +14,13 @@ use Bolero\Forms\Components\Generators\ParserService;
 use Bolero\Forms\Components\Plugin;
 use Bolero\Forms\Components\WebComponent;
 use Bolero\Forms\IO\Utils as IOUtils;
-use Bolero\Plugins\Route\RouteBuilder;
+use Bolero\Forms\Plugins\Route\RouteBuilder;
 use Bolero\Forms\Registry\CodeRegistry;
 use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\PluginRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 use Bolero\Forms\Web\Curl;
-use Bolero\Plugins\Router\RouterService;
+use Bolero\Forms\Plugins\Router\RouterService;
 use Throwable;
 
 class Builder
@@ -28,6 +28,11 @@ class Builder
 
     protected array $list = [];
     protected array $routes = [];
+
+    public static function purgeCopies(): void
+    {
+        IOUtils::delTree(COPY_DIR);
+    }
 
     /**
      * Register all components of the application
@@ -47,6 +52,11 @@ class Builder
             $bootstrapList = IOUtils::walkTreeFiltered(SRC_ROOT, ['phtml'], true);
             foreach ($bootstrapList as $key => $compFile) {
                 $this->describeCustomComponent(SRC_ROOT, $compFile);
+            }
+
+            $pagesList = IOUtils::walkTreeFiltered(CUSTOM_PAGES_ROOT, ['phtml']);
+            foreach ($pagesList as $key => $pageFile) {
+                $this->describeCustomComponent(CUSTOM_PAGES_ROOT, $pageFile);
             }
 
             $componentsList = IOUtils::walkTreeFiltered(CUSTOM_COMPONENTS_ROOT, ['phtml']);
@@ -78,25 +88,6 @@ class Builder
                 ComponentRegistry::cache();
             }
         }
-    }
-
-    public function prepareRoutedComponents(): void
-    {
-        CodeRegistry::uncache();
-        ComponentRegistry::uncache();
-
-        $routes = $this->searchForRoutes();
-
-        array_unshift($routes, 'App');
-
-        foreach ($routes as $route) {
-            $fqRoute = ComponentRegistry::read($route);
-            $comp = $this->list[$fqRoute];
-
-            $comp->copyComponents($this->list);
-        }
-
-        $this->routes = $routes;
     }
 
     private function describeCustomComponent(string $sourceDir, string $filename): void
@@ -166,6 +157,102 @@ class Builder
         $this->list[$comp->getFullyQualifiedFunction()] = $comp;
     }
 
+    public function prepareRoutedComponents(): void
+    {
+        CodeRegistry::uncache();
+        ComponentRegistry::uncache();
+
+        $routes = $this->searchForRoutes();
+
+        array_unshift($routes, 'App');
+
+        foreach ($routes as $route) {
+            $fqRoute = ComponentRegistry::read($route);
+            $comp = $this->list[$fqRoute];
+
+            $comp->copyComponents($this->list);
+        }
+
+        $this->routes = $routes;
+    }
+
+    public function searchForRoutes(): array
+    {
+        $result = [];
+
+        $items = CodeRegistry::items();
+
+        $root = $this->findRouter($items, 'App');
+        if ($root !== null) {
+            $routes = $root->items();
+            foreach ($routes as $route) {
+                $props = (object)$route->props();
+                $rb = new RouteBuilder($props);
+                $re = $rb->build();
+
+                $result[] = $re->getRedirect();
+            }
+        }
+
+        if ($root === null) {
+            $root = $this->findFirstComponent($items, 'App');
+            // array_push($result, $root->getName());
+        }
+
+        return array_unique($result);
+    }
+
+    protected function findRouter(array $items, string $name): ?ComponentEntity
+    {
+        $class = ComponentRegistry::read($name);
+        $list = $items[$class];
+
+        $struct = new ComponentDeclarationStructure($list);
+
+        $composition = $struct->composition;
+
+        $router = null;
+        foreach ($composition as $child) {
+            $name = $child['name'];
+            if ($name == 'Router') {
+                $router = ComponentEntity::buildFromArray($composition);
+
+                break;
+            }
+
+            $router = $this->findRouter($items, $name);
+            if ($router !== null) {
+                break;
+            }
+        }
+
+        return $router;
+    }
+
+    protected function findFirstComponent(array $items, string $name): ?ComponentEntity
+    {
+        $class = ComponentRegistry::read($name);
+
+        $list = $items[$class];
+        $struct = new ComponentDeclarationStructure($list);
+        $decl = new ComponentDeclaration($struct);
+
+        return $decl->getComposition();
+    }
+
+    public function buildAllRoutes(): string
+    {
+
+        $motherUID = $this->buildByName('App');
+        $this->routes = RouterService::findRouteNames();
+
+        foreach ($this->routes as $route) {
+            $this->buildByRoute($route);
+        }
+
+        return $motherUID;
+    }
+
     public function buildByName(string $name): string
     {
         PluginRegistry::uncache();
@@ -214,7 +301,7 @@ class Builder
     public function buildByRoute($route = 'Default'): void
     {
 
-        $port = IOUtils::safeRead(CONFIG_DIR . 'dev_port') ?? '80';
+        $port = trim(IOUtils::safeRead(CONFIG_DIR . 'dev_port') ?? '80');
 
         if ($route === 'App') {
             return;
@@ -265,87 +352,5 @@ class Builder
         $duration = substr($raw_time->format('u'), 0, 3);
 
         Console::writeLine("%s", ConsoleColors::getColoredString($duration . "ms", ConsoleColors::RED));
-    }
-
-    public function buildAllRoutes(): string
-    {
-
-        $motherUID = $this->buildByName('App');
-        $this->routes = RouterService::findRouteNames();
-
-        foreach ($this->routes as $route) {
-            $this->buildByRoute($route);
-        }
-
-        return $motherUID;
-    }
-
-    public function searchForRoutes(): array
-    {
-        $result = [];
-
-        $items = CodeRegistry::items();
-
-        $root = $this->findRouter($items, 'App');
-        if ($root !== null) {
-            $routes = $root->items();
-            foreach ($routes as $route) {
-                $props = (object)$route->props();
-                $rb = new RouteBuilder($props);
-                $re = $rb->build();
-
-                array_push($result, $re->getRedirect());
-            }
-        }
-
-        if ($root === null) {
-            $root = $this->findFirstComponent($items, 'App');
-            // array_push($result, $root->getName());
-        }
-
-        return array_unique($result);
-    }
-
-    protected function findFirstComponent(array $items, string $name): ?ComponentEntity
-    {
-        $class = ComponentRegistry::read($name);
-
-        $list = $items[$class];
-        $struct = new ComponentDeclarationStructure($list);
-        $decl = new ComponentDeclaration($struct);
-
-        return $decl->getComposition();
-    }
-
-    protected function findRouter(array $items, string $name): ?ComponentEntity
-    {
-        $class = ComponentRegistry::read($name);
-        $list = $items[$class];
-
-        $struct = new ComponentDeclarationStructure($list);
-
-        $composition = $struct->composition;
-
-        $router = null;
-        foreach ($composition as $child) {
-            $name = $child['name'];
-            if ($name == 'Router') {
-                $router = ComponentEntity::buildFromArray($composition);
-
-                break;
-            }
-
-            $router = $this->findRouter($items, $name);
-            if ($router !== null) {
-                break;
-            }
-        }
-
-        return $router;
-    }
-
-    public static function purgeCopies(): void
-    {
-        IOUtils::delTree(COPY_DIR);
     }
 }

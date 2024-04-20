@@ -1,6 +1,6 @@
 <?php
 
-namespace Bolero\Commands\Build;
+namespace Bolero\Forms\Commands\Build;
 
 use Bolero\Forms\Commands\AbstractCommand;
 use Bolero\Forms\Commands\Attributes\CommandDeclaration;
@@ -9,10 +9,11 @@ use Bolero\Forms\Commands\Attributes\CommandDeclaration;
 #[CommandDeclaration(desc: "Build the application.")]
 class Main extends AbstractCommand
 {
-    public function run(): void
+    public function run(): int
     {
-
         $egg = new Lib($this->application);
         $egg->build();
+
+        return 0;
     }
 }
