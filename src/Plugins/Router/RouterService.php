@@ -3,6 +3,7 @@
 namespace Bolero\Forms\Plugins\Router;
 
 use Bolero\Forms\Components\Component;
+use Bolero\Forms\Plugins\Route\RouteStructure;
 use Bolero\Forms\Web\Request;
 use Bolero\Forms\Plugins\Route\RouteEntity;
 use Bolero\Forms\Plugins\Route\RouteInterface;
@@ -10,6 +11,8 @@ use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\HttpErrorRegistry;
 use Bolero\Forms\Registry\RouteRegistry;
 
+use Bolero\Framework\Utils\File;
+use Bolero\Framework\Utils\Text;
 use function Bolero\Forms\Hooks\useState;
 
 class RouterService implements RouterServiceInterface
@@ -282,6 +285,23 @@ class RouterService implements RouterServiceInterface
     public function addRoute(RouteInterface $route): void
     {
         $methodRegistry = RouteRegistry::read($route->getMethod()) ?: [];
+        if (array_key_exists($route->getRule(), $methodRegistry)) {
+            $currentRoute = $methodRegistry[$route->getRule()];
+            $middlewares = $currentRoute['middlewares'];
+
+            if(!empty($middlewares)) {
+                $methodRegistry[$route->getRule()] = [
+                    'rule' => $route->getRule(),
+                    'redirect' => $route->getRedirect(),
+                    'normal' => $route->getNormalized(),
+                    'translate' => $route->getTranslation(),
+                    'error' => $route->getError(),
+                    'exact' => $route->isExact(),
+                    'middlewares' => $middlewares,
+                ];
+                RouteRegistry::write($route->getMethod(), $methodRegistry);
+            }
+        }
 
         if (!array_key_exists($route->getRule(), $methodRegistry)) {
             $methodRegistry[$route->getRule()] = [
@@ -291,9 +311,11 @@ class RouterService implements RouterServiceInterface
                 'translate' => $route->getTranslation(),
                 'error' => $route->getError(),
                 'exact' => $route->isExact(),
+                'middlewares' =>$route->getMiddlewares(),
             ];
             RouteRegistry::write($route->getMethod(), $methodRegistry);
         }
+
 
         if (($error = $route->getError()) !== 0) {
             HttpErrorRegistry::write($error, $route->getRedirect());
@@ -305,6 +327,14 @@ class RouterService implements RouterServiceInterface
         return RouteRegistry::cache() && HttpErrorRegistry::cache();
     }
 
+    public function moveCache()
+    {
+        $json = File::safeRead(RouteRegistry::getCacheFilename());
+        $phpRoutes = Text::jsonToPhpReturnedArray($json);
+        File::safeWrite(RouteRegistry::getMovedPhpFilename(), $phpRoutes);
+        rename(RouteRegistry::getCacheFilename(), RouteRegistry::getMovedFilename());
+    }
+
     public function matchRoute(RouteEntity $route): ?array
     {
         return $this->matchRouteEx(
@@ -312,7 +342,9 @@ class RouterService implements RouterServiceInterface
             $route->getRule(),
             $route->getRedirect(),
             $route->getTranslation(),
-            $route->isExact()
+            $route->isExact(),
         );
     }
+
+
 }

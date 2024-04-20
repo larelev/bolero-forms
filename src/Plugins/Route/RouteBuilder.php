@@ -3,12 +3,20 @@
 namespace Bolero\Forms\Plugins\Route;
 
 use Bolero\Forms\Components\Builders\AbstractBuilder;
+use Bolero\Forms\Components\Children;
+use Bolero\Forms\Registry\CodeRegistry;
+use Bolero\Forms\Registry\ComponentRegistry;
+use Bolero\Framework\Logger\Logger;
+use stdClass;
 
 class RouteBuilder extends AbstractBuilder
 {
+    private Children|null $children = null;
 
     public function __construct(object $props)
     {
+
+
         parent::__construct($props, RouteStructure::class);
     }
 
