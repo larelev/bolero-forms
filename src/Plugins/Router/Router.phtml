@@ -19,8 +19,8 @@ function Router($children)
 
         if (RouteRegistry::hasMoved()) {
 
-            [$path, $query, $error, $code] = $service->doRouting();
-            $service->renderRoute($code === 200, $path, $query, $error, $code, $html);
+            [$path, $query, $error, $code, $middlewares] = $service->doRouting();
+            $service->renderRoute($code === 200, $path, $query, $error, $code, $middlewares, $html);
 
             $hasRouted = true;
         }

@@ -75,7 +75,7 @@ final class ClosedComponentsParser extends AbstractTokenParser
                 $filename = $muid . DIRECTORY_SEPARATOR . ComponentRegistry::read($funcName);
 
                 $route = new RouteEntity( new RouteStructure($parent->props()) );
-                $middlewareHtml = "function() {\n\tinclude CACHE_DIR . '$filename';\n\t\$fn = \\{$funcName}($args); \$fn();\n}\n";
+                $middlewareHtml = "function() {\n\tinclude_once CACHE_DIR . '$filename';\n\t\$fn = \\{$funcName}($args); \$fn();\n}\n";
                 RouteRegistry::uncache();
                 $methodRegistry = RouteRegistry::read($route->getMethod()) ?: [];
 

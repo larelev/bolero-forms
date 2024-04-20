@@ -178,16 +178,17 @@ class RouterService implements RouterServiceInterface
             $query = $route->query;
             $error = $route->error;
             $responseCode = $route->code;
+            $middlewares = $route->middlewares;
 
             if ($responseCode === 200) {
                 $i = $c;
             }
         }
 
-        $this->renderRoute($responseCode === 200, $path, $query, $error, $responseCode, $html);
+        $this->renderRoute($responseCode === 200, $path, $query, $error, $responseCode, $middlewares, $html);
     }
 
-    public function renderRoute(bool $pageFound, string $path, array $query, int $error, int $responseCode, string &$html): void
+    public function renderRoute(bool $pageFound, string $path, array $query, int $error, int $responseCode, array $middlewares, string &$html): void
     {
         if (!$pageFound) {
             http_response_code($responseCode);
@@ -203,6 +204,11 @@ class RouterService implements RouterServiceInterface
 
         $request = new Request();
 
+        if(count($middlewares)) {
+            foreach ($middlewares as $middleware) {
+                call_user_func($middleware);
+            }
+        }
         $comp = new Component($path);
         $comp->render($query, $request);
     }
@@ -213,10 +219,9 @@ class RouterService implements RouterServiceInterface
             return null;
         }
 
-        $json = file_get_contents(CACHE_DIR . 'routes.json');
-        $routes = json_decode($json);
+        $routes = require RouteRegistry::getMovedPhpFilename();
         $method = REQUEST_METHOD;
-        $methodRoutes = !isset($routes->$method) ? null : $routes->$method;
+        $methodRoutes = !isset($routes[$method]) ? null : $routes[$method];
 
         if (null === $methodRoutes) {
             return null;
@@ -225,12 +230,14 @@ class RouterService implements RouterServiceInterface
         $redirect = '';
         $parameters = [];
 
-        foreach ($methodRoutes as $rule => $stuff) {
+        foreach ($methodRoutes as $rule => $settings) {
 
+            $stuff = (object) $settings;
             $redirect = $stuff->redirect;
             $translation = $stuff->translate;
             $isExact = $stuff->exact;
             $error = $stuff->error;
+            $middlewares = $stuff->middlewares;
 
             [$redirect, $parameters, $code] = $this->matchRouteEx($method, $rule, $redirect, $translation, $isExact);
 
@@ -241,7 +248,7 @@ class RouterService implements RouterServiceInterface
             break;
         }
 
-        return [$redirect, $parameters, $error, $code];
+        return [$redirect, $parameters, $error, $code, $middlewares];
     }
 
     private function matchRouteEx(string $method, string $rule, string $redirect, string $translation, bool $isExact): ?array
