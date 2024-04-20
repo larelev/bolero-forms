@@ -14,7 +14,7 @@ use JetBrains\PhpStorm\Deprecated;
 #[Deprecated("It's useless for now", "useEffect", "0.3")]
 class MotherSlotsParser extends AbstractTokenParser
 {
-    public function do(null|string|array $parameter = null): void
+    public function do(null|string|array|object $parameter = null): void
     {
 
         $slotParser = new UseSlotParser($this->component, $this->parent);

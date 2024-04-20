@@ -2,14 +2,28 @@
 
 namespace Bolero\Forms\Plugins\Route;
 
+use Bolero\Forms\Components\Children;
 use Bolero\Forms\Plugins\Router\RouterService;
 
+use Bolero\Framework\Logger\Logger;
+use stdClass;
 use function Bolero\Forms\Hooks\useEffect;
 use function Bolero\Forms\Hooks\useState;
 
-function Route($props)
+function Route($children)
 {
-    useEffect(function ($props, /* bool */ $onError, /* string */ $html) {
+    useEffect(function ($children, /* bool */ $onError, /* string */ $html) {
+
+        $props = $children;
+        if(method_exists($children, "props")) {
+            $args = $children->props();
+
+            $props = new stdClass;
+            foreach ($args as $field => $value) {
+                $props->{$field} = urldecode($value);
+            }
+        }
+
         $routeBuilder = new RouteBuilder($props);
         $route = $routeBuilder->build();
 

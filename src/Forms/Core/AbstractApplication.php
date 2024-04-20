@@ -21,7 +21,7 @@ abstract class AbstractApplication extends Element
 
     protected array $commands = [];
     protected array $callbacks = [];
-    protected string $appName = 'app';
+    protected string|null $appName = 'app';
     protected string $appTitle = '';
     protected string $scriptName = 'app.php';
     protected string $appDirectory = '';
@@ -197,7 +197,7 @@ abstract class AbstractApplication extends Element
         Console::writeLine($help);
     }
 
-    public function getName(): string
+    public function getName(): string|null
     {
         if (empty($this->appName) || $this->appName == 'app') {
             $this->appName = StateRegistry::ini('application', 'name');

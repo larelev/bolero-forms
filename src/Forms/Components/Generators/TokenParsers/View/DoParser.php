@@ -6,7 +6,7 @@ use Bolero\Forms\Components\Generators\TokenParsers\AbstractTokenParser;
 
 final class DoParser extends AbstractTokenParser
 {
-    public function do(null|string|array $parameter = null): void
+    public function do(null|string|array|object $parameter = null): void
     {
         $re = '/@do *$/m';
         $subst = '<% do {%>';

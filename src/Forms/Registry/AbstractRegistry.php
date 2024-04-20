@@ -18,9 +18,6 @@ abstract class AbstractRegistry implements AbstractRegistryInterface
 
     public function _write(string $key, $value): void
     {
-        if (!isset($this->entries[$key])) {
-            $this->entries[$key] = null;
-        }
         $this->entries[$key] = $value;
     }
 

@@ -190,7 +190,7 @@ class Builder
                 $rb = new RouteBuilder($props);
                 $re = $rb->build();
 
-                array_push($result, $re->getRedirect());
+                $result[] = $re->getRedirect();
             }
         }
 

@@ -7,10 +7,11 @@ use Bolero\Forms\IO\Utils;
 use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 use Bolero\Forms\WebComponents\ManifestReader;
+use Bolero\Framework\Logger\Logger;
 
 final class OpenComponentsParser extends AbstractTokenParser
 {
-    public function do(null|string|array $parameter = null): void
+    public function do(null|string|array|object $parameter = null): void
     {
         $this->result = [];
         $this->useVariables = $parameter;
@@ -26,9 +27,14 @@ final class OpenComponentsParser extends AbstractTokenParser
 
         $subject = $this->html;
 
-        $closure = function (ComponentEntityInterface $item, int $index) use (&$subject, &$result) {
+        $parent = null;
+        $closure = function (ComponentEntityInterface $item, int $index) use ($comp, &$subject, &$result, &$parent) {
 
             if (!$item->hasCloser()) {
+                $p = new ClosedComponentsParser($comp);
+                $p->do($parent);
+                $html = $p->getHtml();
+
                 return;
             }
             $uid = $item->getUID();
@@ -42,17 +48,22 @@ final class OpenComponentsParser extends AbstractTokenParser
             $componentArgs = $this->useVariables;
             $componentArgs = $item->props() !== null ? array_merge($componentArgs, $item->props()) : $componentArgs;
 
-            if ($componentName === 'FakeFragment') {
+            if ($componentName == 'FakeFragment') {
                 return;
             }
 
-            if ($componentName === 'Fragment') {
+            if ($componentName == 'Fragment') {
                 return;
             }
 
-            if ($componentName === 'Slot') {
+            if ($componentName == 'Slot') {
                 return;
             }
+//
+//            if($componentName == 'Route') {
+//                $logger = new Logger();
+//                $logger->dump("Route", $item);
+//            }
 
             $motherUID = $this->component->getMotherUID();
             $decl = $this->component->getDeclaration();
@@ -96,8 +107,8 @@ final class OpenComponentsParser extends AbstractTokenParser
                 $preComponentBody .= "\t\t\t} ?>\n";
             }
 
-            $componentRender = "<?php \$struct = new \\Bolero\Forms\\Framework\\Components\\ChildrenStructure(['props' => (object) $props, 'buffer' => function()$useChildren{?>\n\n$preComponentBody$componentBody\n<?php\n}, 'motherUID' => '$motherUID', 'uid' => '$uid', 'class' => '$className', 'name' => '$name', 'parentProps' => $classArgs]);\n";
-            $componentRender .= "\t\t\t{$pkey} = new \\Bolero\Forms\\Framework\\Components\\Children(\$struct);\n";
+            $componentRender = "<?php \$struct = new \\Bolero\\Forms\\Components\\ChildrenStructure(['props' => (object) $props, 'buffer' => function()$useChildren{?>\n\n$preComponentBody$componentBody\n<?php\n}, 'motherUID' => '$motherUID', 'uid' => '$uid', 'class' => '$className', 'name' => '$name', 'parentProps' => $classArgs]);\n";
+            $componentRender .= "\t\t\t{$pkey} = new \\Bolero\\Forms\\Components\\Children(\$struct);\n";
             $componentRender .= "\t\t\t\$fn = \\$fqComponentName({$pkey}); \$fn(); ?>\n";
 
             $subject = str_replace($componentBody, $componentRender, $subject);
@@ -112,10 +123,13 @@ final class OpenComponentsParser extends AbstractTokenParser
             Utils::safeWrite(CACHE_DIR . $this->component->getMotherUID() . DIRECTORY_SEPARATOR . $filename, $subject);
 
             $this->result[] = $componentName;
+
+            $parent = $item;
         };
 
         $closure($cmpz, 0);
         if ($cmpz->hasChildren()) {
+            $parent = $cmpz;
             $cmpz->forEach($closure, $cmpz);
         }
 

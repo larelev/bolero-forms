@@ -76,19 +76,15 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
         $parser->doUsesAs($this);
     }
 
-    public function render(?array $functionArgs = null, ?Request $request = null): string
+    public function render(?array $functionArgs = null, ?Request $request = null): void
     {
         [$fqFunctionName, $cacheFilename] = $this->renderComponent($this->motherUID, $this->function, $functionArgs);
 
-        $html = $this->renderHTML($cacheFilename, $fqFunctionName, $functionArgs, $request);
-
-        return $html;
+        echo $this->renderHTML($cacheFilename, $fqFunctionName, $functionArgs, $request);
     }
 
     public function renderComponent(string $motherUID, string $functionName, ?array $functionArgs = null): array
     {
-        Console::getLogger()->info("Start rendering %s ...", $functionName);
-
         [$fqFunctionName, $cacheFilename, $isCached] = $this->findComponent($functionName, $motherUID);
         if (!$isCached) {
             ComponentRegistry::uncache();
@@ -103,16 +99,11 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
             $cacheFilename = $motherUID . DIRECTORY_SEPARATOR . $component->getFlattenFilename();
         }
 
-        Console::getLogger()->info("Finish rendering %s ...", $functionName);
-
-
         return [$fqFunctionName, $cacheFilename];
     }
 
     public function parse(): void
     {
-        Console::getLogger()->info("Parsing %s ...", $this->getFunction());
-
         CodeRegistry::setCacheDirectory(CACHE_DIR . $this->getMotherUID());
         CodeRegistry::uncache();
         WebComponentRegistry::uncache();
@@ -156,11 +147,11 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
         $this->updateComponent($this);
 
         while ($compz = $this->getDeclaration()->getComposition() !== null) {
-            $parser->doClosedComponents($this);
+            $parser->doOpenComponents($this);
             $this->code = $parser->getHtml();
             $this->updateComponent($this);
 
-            $parser->doOpenComponents($this);
+            $parser->doClosedComponents($this);
             $this->code = $parser->getHtml();
             $this->updateComponent($this);
 

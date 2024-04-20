@@ -144,4 +144,20 @@ class StateRegistry extends StaticElement
             return self::$_items[$item];
         }
     }
+
+    public static function ini($section, $key = null): string | null
+    {
+        $section = self::read('ini', $section);
+        $value = null;
+
+        if ($key === null) {
+            return $section;
+        }
+
+        if (is_array($section)) {
+            $value = isset($section[$key]) ? $section[$key] : $value;
+        }
+
+        return $value;
+    }
 }
