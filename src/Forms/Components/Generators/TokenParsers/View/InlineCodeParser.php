@@ -11,7 +11,7 @@ final class InlineCodeParser extends AbstractTokenParser
         $phtml = [];
 
         $text = $this->html;
-        if($parameter !== null && is_array($parameter)) {
+        if(is_array($parameter)) {
             $text = $parameter['html'];
             $this->useVariables = $parameter['useVariables'];
         }

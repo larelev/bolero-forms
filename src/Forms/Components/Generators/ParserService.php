@@ -29,9 +29,9 @@ class ParserService implements ParserServiceInterface
     protected array $useTypes = [];
     protected string $html = '';
     protected ?object $children = null;
-    protected $componentList = [];
-    protected $openComponentList = [];
-    protected $result = null;
+    protected array $componentList = [];
+    protected array $openComponentList = [];
+    protected string|array|bool|null $result = null;
 
     public function getChildren(): ?object
     {

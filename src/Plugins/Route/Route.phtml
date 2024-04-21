@@ -4,8 +4,6 @@ namespace Bolero\Forms\Plugins\Route;
 
 use Bolero\Forms\Components\Children;
 use Bolero\Forms\Plugins\Router\RouterService;
-
-use Bolero\Framework\Logger\Logger;
 use stdClass;
 use function Bolero\Forms\Hooks\useEffect;
 use function Bolero\Forms\Hooks\useState;
@@ -40,7 +38,7 @@ function Route($children)
         [$path, $query, $code] = $router->matchRoute($route);
 
         [$state, $setState] = useState();
-        $routes = isset($state->routes) ? $state->routes : [];
+        $routes = $state->routes ?? [];
 
         array_push($routes, ['path' => $path, 'query' => $query, 'error' => $error, 'code' => $code,]);
         useState(['routes' => $routes]);

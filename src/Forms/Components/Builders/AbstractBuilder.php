@@ -16,6 +16,9 @@ abstract class AbstractBuilder
         $this->struct = $struct;
     }
 
+    /**
+     * @throws \ErrorException
+     */
     protected function buildEx(string $class): ElementInterface
     {
 

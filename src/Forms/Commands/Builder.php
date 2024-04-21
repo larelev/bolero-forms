@@ -14,6 +14,7 @@ class Builder
      *
      * @param string $verb
      * @param string $subject
+     * @param string $description
      * @param string $methodName
      * @param array $arguments
      * @param string $srcDir

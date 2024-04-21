@@ -4,7 +4,7 @@ namespace Appliance;
 
 use function Bolero\Forms\Hooks\useEffect;
 
-function Matroichka1($children)
+function Matroichka1($children): string
 {
     useEffect(function($children, /* string */ $id, /* string */ $label) {
         $id = $children->props()->id;

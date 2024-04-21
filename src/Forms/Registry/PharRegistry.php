@@ -2,11 +2,9 @@
 
 namespace Bolero\Forms\Registry;
 
-use Phar;
-
 class PharRegistry extends AbstractStaticRegistry
 {
-    private static $instance = null;
+    private static ?AbstractRegistryInterface $instance = null;
 
     public static function reset(): void
     {

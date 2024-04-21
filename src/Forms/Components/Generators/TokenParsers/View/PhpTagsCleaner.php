@@ -2,8 +2,6 @@
 
 namespace Bolero\Forms\Components\Generators\TokenParsers\View;
 
-use Bolero\Forms\CLI\Console;
-use Bolero\Forms\CLI\ConsoleOptions;
 use Bolero\Forms\Components\Generators\TokenParsers\AbstractTokenParser;
 
 final class PhpTagsCleaner extends AbstractTokenParser

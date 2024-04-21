@@ -7,7 +7,6 @@ use Bolero\Forms\IO\Utils;
 use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 use Bolero\Forms\WebComponents\ManifestReader;
-use Bolero\Framework\Logger\Logger;
 
 final class OpenComponentsParser extends AbstractTokenParser
 {
@@ -64,7 +63,7 @@ final class OpenComponentsParser extends AbstractTokenParser
             $motherUID = $this->component->getMotherUID();
             $decl = $this->component->getDeclaration();
 
-            $propsArgs = $componentArgs === null ?: self::doArgumentsToString($componentArgs);
+            $propsArgs = self::doArgumentsToString($componentArgs);
             $props = (($propsArgs === null) ? "[]" : $propsArgs);
 
             $propsKeys = $this->argumentsKeys($this->useVariables);

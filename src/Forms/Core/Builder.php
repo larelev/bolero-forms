@@ -2,7 +2,6 @@
 
 namespace Bolero\Forms\Core;
 
-use DateTime;
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\CLI\ConsoleColors;
 use Bolero\Forms\Components\Component;
@@ -15,12 +14,13 @@ use Bolero\Forms\Components\Plugin;
 use Bolero\Forms\Components\WebComponent;
 use Bolero\Forms\IO\Utils as IOUtils;
 use Bolero\Forms\Plugins\Route\RouteBuilder;
+use Bolero\Forms\Plugins\Router\RouterService;
 use Bolero\Forms\Registry\CodeRegistry;
 use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\PluginRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 use Bolero\Forms\Web\Curl;
-use Bolero\Forms\Plugins\Router\RouterService;
+use DateTime;
 use Throwable;
 
 class Builder
@@ -298,6 +298,9 @@ class Builder
         return $comp->getMotherUID();
     }
 
+    /**
+     * @throws \Exception
+     */
     public function buildByRoute($route = 'Default'): void
     {
 

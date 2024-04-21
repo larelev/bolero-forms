@@ -3,6 +3,7 @@
 namespace Bolero\Forms;
 
 use Bolero\Forms\IO\Utils;
+use function strlen;
 
 final class ElementUtils
 {
@@ -41,7 +42,7 @@ final class ElementUtils
         $end = -1;
         $start = strpos($classText, $keyword);
         if ($start > -1) {
-            $start += \strlen($keyword) + 1;
+            $start += strlen($keyword) + 1;
             $end = strpos($classText, $delimiter, $start);
             $result = trim(substr($classText, $start, $end - $start));
         }

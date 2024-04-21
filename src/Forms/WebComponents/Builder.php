@@ -4,7 +4,6 @@ namespace Bolero\Forms\WebComponents;
 
 use Bolero\Forms\IO\Utils;
 use Exception;
-use function Bolero\Forms\Hooks\useEffect;
 
 class Builder
 {
@@ -20,6 +19,7 @@ class Builder
      * @param array $arguments
      * @param string $destDir
      * @return void
+     * @throws Exception
      */
     function saveManifest(string $tagName, string $className, string $entrypoint, array $arguments, string $destDir): void
     {
@@ -42,6 +42,7 @@ class Builder
      *
      * @param string $tagName
      * @param string $className
+     * @param bool $hasBackendProps
      * @param string $entrypoint
      * @param array $arguments
      * @param string $srcDir

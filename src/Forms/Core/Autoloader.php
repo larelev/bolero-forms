@@ -3,7 +3,6 @@
 namespace Bolero\Forms\Core;
 
 use Bolero\Forms\Registry\FrameworkRegistry;
-use Bolero\Forms\Registry\PharRegistry;
 
 class Autoloader
 {
@@ -13,7 +12,7 @@ class Autoloader
      *
      * @param bool $prepend Prepend the autoloader on the stack instead of appending it.
      */
-    public static function register($prepend = false)
+    public static function register(bool $prepend = false): void
     {
         spl_autoload_register(array(new self, 'load'), true, $prepend);
     }

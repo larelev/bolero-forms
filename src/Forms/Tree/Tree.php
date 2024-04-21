@@ -2,6 +2,8 @@
 
 namespace Bolero\Forms\Tree;
 
+use Closure;
+
 class Tree implements TreeInterface
 {
     protected array $elementList = [];
@@ -94,7 +96,7 @@ class Tree implements TreeInterface
         return count($this->elementList);
     }
 
-    public function forEach(callable $callback, TreeInterface $tree, \Closure|null $breakOn = null): void
+    public function forEach(callable $callback, TreeInterface $tree, Closure|null $breakOn = null): void
     {
         foreach ($tree as $key => $item) {
             call_user_func($callback, $item, $key);
@@ -107,7 +109,7 @@ class Tree implements TreeInterface
         }
     }
 
-    public function forEachRecursive(callable $callback, TreeInterface $tree, \Closure|null $breakOn = null): void
+    public function forEachRecursive(callable $callback, TreeInterface $tree, Closure|null $breakOn = null): void
     {
         foreach ($tree as $key => $item) {
             if ($item->hasChildren()) {

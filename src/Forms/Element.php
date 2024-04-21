@@ -2,8 +2,7 @@
 
 namespace Bolero\Forms;
 
-use DateTime;
-use \ReflectionClass;
+use ReflectionClass;
 
 class Element extends StaticElement implements ElementInterface
 {
@@ -45,6 +44,9 @@ class Element extends StaticElement implements ElementInterface
         return $result;
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function getMethodParameters($method): ?array
     {
         $ref = $this->getReflection();
@@ -66,7 +68,7 @@ class Element extends StaticElement implements ElementInterface
         return $this->_reflection;
     }
 
-    public function addChild(ElementInterface $child)
+    public function addChild(ElementInterface $child): void
     {
         $this->children[$child->getId()] = $child;
     }

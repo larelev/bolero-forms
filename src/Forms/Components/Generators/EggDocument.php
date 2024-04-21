@@ -2,8 +2,6 @@
 
 namespace Egg;
 
-use Bolero\Forms\Element;
-
 define('QUOTE', '"');
 define('OPEN_TAG', '<');
 define('CLOSE_TAG', '>');
@@ -20,17 +18,17 @@ define('TAG_PATTERN_ANY', "phx:");
 class EggDocument
 {
 
-    private $count = 0;
-    private $cursor = 0;
-    private $matches = [];
-    private $text = STR_EMPTY;
-    private $id = -1;
+    private int $count = 0;
+    private int $cursor = 0;
+    private array $matches = [];
+    private string $text = STR_EMPTY;
+    private int $id = -1;
     private $match = null;
-    private $list = [];
-    private $depths = [];
-    private $matchesByDepth = [];
-    private $endPos = -1;
-    private $allTags = [];
+    private array $list = [];
+    private array $depths = [];
+    private array $matchesByDepth = [];
+    private int $endPos = -1;
+    private array $allTags = [];
 
     public function __construct($text)
     {
@@ -50,7 +48,7 @@ class EggDocument
 
         $tag = isset($match[0]) ? $match[0][0] : '';
         if (empty($tag)) {
-            return $result;
+            return false;
         }
 
         $result = substr($tag, -2) === TERMINATOR . CLOSE_TAG;

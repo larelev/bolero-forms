@@ -7,11 +7,12 @@ use Bolero\Forms\IO\Utils;
 use Bolero\Forms\WebComponents\ManifestEntity;
 use Bolero\Forms\WebComponents\ManifestReader;
 use Bolero\Forms\WebComponents\Parser;
+use DateTime;
 
 class WebComponentService implements WebComponentServiceInterface
 {
 
-    public function __construct(private ChildrenInterface $children)
+    public function __construct(private readonly ChildrenInterface $children)
     {
     }
 
@@ -22,7 +23,7 @@ class WebComponentService implements WebComponentServiceInterface
 
     public function markAsPending(): void
     {
-        $date = new \DateTime();
+        $date = new DateTime();
         $timestamp = $date->getTimestamp();
         $pendingJs = RUNTIME_JS_DIR . $this->children->getName() . '.pending' . JS_EXTENSION;
         Utils::safeWrite($pendingJs, "const time = $timestamp");

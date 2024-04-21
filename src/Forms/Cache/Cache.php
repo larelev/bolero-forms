@@ -5,6 +5,7 @@ namespace Bolero\Forms\Cache;
 use Bolero\Forms\CLI\Console;
 use Bolero\Forms\IO\Utils;
 use Bolero\Forms\StaticElement;
+use Throwable;
 
 class Cache extends StaticElement
 {
@@ -45,7 +46,7 @@ class Cache extends StaticElement
             $result &= self::clearCache();
             $result &= self::clearRuntimeDirs();
             $result &= self::clearRuntimeJsDirs();
-        } catch (\Throwable $ex) {
+        } catch (Throwable $ex) {
             Console::error($ex);
 
             $result = false;

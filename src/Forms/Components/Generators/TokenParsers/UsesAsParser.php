@@ -3,7 +3,6 @@
 namespace Bolero\Forms\Components\Generators\TokenParsers;
 
 use Bolero\Forms\Registry\ComponentRegistry;
-use Bolero\Forms\Registry\FrameworkRegistry;
 
 final class UsesAsParser extends AbstractTokenParser
 {

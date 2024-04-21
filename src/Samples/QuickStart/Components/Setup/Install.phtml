@@ -3,11 +3,10 @@
 namespace Bolero\Forms\Plugins\Setup;
 
 use function Bolero\Forms\Hooks\useEffect;
-use function Bolero\Forms\Hooks\useProps;
 
 define('SERVER_ERROR', 'Something went wrong, please check the server setup');
 
-function Install($props)
+function Install($props): string
 {
 
     useEffect(function ($props, /* bool */ $hasResponse, /* string */ $response, /* string */ $action) {

@@ -59,7 +59,7 @@ class MotherSlotsParser extends AbstractTokenParser
         $decl3 = substr($parentHtml, $parentComponent->getBodyStart() + 1);
 
         // Remove useSlot from child component
-        if ($source !== "" && $source !== null && $dest !== "" && $dest !== null) {
+        if ($dest !== "" && $dest !== null) {
             $this->html = str_replace($source, "", $this->html);
 
             $uses = '';

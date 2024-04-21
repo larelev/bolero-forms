@@ -2,7 +2,6 @@
 
 namespace Bolero\Forms\Components;
 
-use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Components\Generators\ComponentParser;
 use Bolero\Forms\Components\Generators\ParserService;
 use Bolero\Forms\ElementUtils;
@@ -62,7 +61,8 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
 
     }
 
-    public static function createByHtml(string $html) {
+    public static function createByHtml(string $html): static
+    {
         $new = new static();
         $new->code = $html;
 
@@ -76,6 +76,9 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
         $parser->doUsesAs($this);
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function render(?array $functionArgs = null, ?Request $request = null): void
     {
         [$fqFunctionName, $cacheFilename] = $this->renderComponent($this->motherUID, $this->function, $functionArgs);
@@ -102,6 +105,9 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
         return [$fqFunctionName, $cacheFilename];
     }
 
+    /**
+     * @throws \Exception
+     */
     public function parse(): void
     {
         CodeRegistry::setCacheDirectory(CACHE_DIR . $this->getMotherUID());

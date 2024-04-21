@@ -10,7 +10,6 @@ use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\RouteRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 use Bolero\Forms\WebComponents\ManifestReader;
-use Bolero\Framework\Logger\Logger;
 
 final class ClosedComponentsParser extends AbstractTokenParser
 {

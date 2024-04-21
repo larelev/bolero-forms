@@ -2,10 +2,11 @@
 
 namespace Bolero\Forms\CLI;
 
-use Bolero\Forms\Commands\Constants\Lib;
 use Bolero\Forms\Commands\ApplicationCommands;
 use Bolero\Forms\Commands\CommandRunner;
+use Bolero\Forms\Commands\Constants\Lib;
 use Bolero\Forms\Core\AbstractApplication;
+use Throwable;
 
 class Application extends AbstractApplication
 {
@@ -36,6 +37,7 @@ class Application extends AbstractApplication
      * Get CLI argument by index
      *
      * @param integer $index
+     * @param string $default
      * @return null|string NULL when the index is not in $argc range
      */
     public function getArgi(int $index, string $default = ''): null|string
@@ -88,7 +90,7 @@ class Application extends AbstractApplication
         try {
             $command = new Lib($this);
             $command->displayConstants();
-        } catch (\Throwable $ex) {
+        } catch (Throwable $ex) {
             Console::error($ex);
 
             return [];

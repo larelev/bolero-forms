@@ -10,6 +10,9 @@ use Bolero\Forms\Web\Curl;
 class Lib extends AbstractCommandLib
 {
 
+    /**
+     * @throws \Exception
+     */
     public function requireMaster(): object
     {
 

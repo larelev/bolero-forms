@@ -5,7 +5,6 @@ namespace Bolero\Forms\Components\Validators;
 use Bolero\Forms\Core\Structure;
 use ErrorException;
 use Exception;
-use InvalidArgumentException;
 
 class PropsValidator
 {
@@ -18,6 +17,9 @@ class PropsValidator
         $this->structClass = $structClass;
     }
 
+    /**
+     * @throws ErrorException
+     */
     public function validate(): ?Structure
     {
         $result = null;

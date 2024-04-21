@@ -66,7 +66,7 @@ class ComponentEntity extends Tree implements ComponentEntityInterface
 
     public function bindNode(): void
     {
-        if ($this->elementList === false || $this->elementList === null) {
+        if ($this->elementList === false) {
             return;
         }
 

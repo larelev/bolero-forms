@@ -10,8 +10,8 @@ class CommandRunner extends Element
 {
 
     public function __construct(
-        private Application                $_application,
-        private CommandCollectionInterface $_commands
+        private readonly Application       $_application,
+        private readonly CommandCollectionInterface $_commands
     )
     {
     }

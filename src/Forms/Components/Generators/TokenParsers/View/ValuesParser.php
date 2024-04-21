@@ -2,7 +2,6 @@
 
 namespace Bolero\Forms\Components\Generators\TokenParsers\View;
 
-use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Components\Generators\TokenParsers\AbstractTokenParser;
 
 final class ValuesParser extends AbstractTokenParser
@@ -11,7 +10,7 @@ final class ValuesParser extends AbstractTokenParser
     {
 
         $text = '';
-        if($parameter !== null && is_array($parameter)) {
+        if(is_array($parameter)) {
             $text = $parameter['html'];
             $this->useVariables = $parameter['useVariables'];
         }

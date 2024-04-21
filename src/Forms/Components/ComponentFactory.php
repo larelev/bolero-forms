@@ -2,8 +2,8 @@
 
 namespace Bolero\Forms\Components;
 
-use Bolero\Forms\Registry\PluginRegistry;
 use Bolero\Forms\Registry\ComponentRegistry;
+use Bolero\Forms\Registry\PluginRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 
 class ComponentFactory

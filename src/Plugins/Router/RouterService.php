@@ -3,14 +3,11 @@
 namespace Bolero\Forms\Plugins\Router;
 
 use Bolero\Forms\Components\Component;
-use Bolero\Forms\Plugins\Route\RouteStructure;
-use Bolero\Forms\Web\Request;
-use Bolero\Forms\Plugins\Route\RouteEntity;
 use Bolero\Forms\Plugins\Route\RouteInterface;
 use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\HttpErrorRegistry;
 use Bolero\Forms\Registry\RouteRegistry;
-
+use Bolero\Forms\Web\Request;
 use Bolero\Framework\Utils\File;
 use Bolero\Framework\Utils\Text;
 use function Bolero\Forms\Hooks\useState;
@@ -49,7 +46,7 @@ class RouterService implements RouterServiceInterface
         });
 
         if (count($allroutes) === 0) {
-            return $result;
+            return null;
         }
 
         sort($allroutes);
@@ -57,10 +54,10 @@ class RouterService implements RouterServiceInterface
         $query = parse_url('https://localhost' . $allroutes[0]['translate'], PHP_URL_QUERY);
 
         if ($query === null || $query === false) {
-            return $result;
+            return null;
         }
 
-        parse_str($query, $result);
+        parse_str($query, (array)$result);
 
         return $result;
     }
@@ -101,7 +98,7 @@ class RouterService implements RouterServiceInterface
         });
 
         if (count($allroutes) === 0) {
-            return $result;
+            return null;
         }
 
         sort($allroutes);
@@ -134,7 +131,7 @@ class RouterService implements RouterServiceInterface
         });
 
         if (count($allroutes) === 0) {
-            return $result;
+            return null;
         }
 
         sort($allroutes);
@@ -334,7 +331,7 @@ class RouterService implements RouterServiceInterface
         return RouteRegistry::cache() && HttpErrorRegistry::cache();
     }
 
-    public function moveCache()
+    public function moveCache(): void
     {
         $json = File::safeRead(RouteRegistry::getCacheFilename());
         $phpRoutes = Text::jsonToPhpReturnedArray($json);
@@ -342,7 +339,7 @@ class RouterService implements RouterServiceInterface
         rename(RouteRegistry::getCacheFilename(), RouteRegistry::getMovedFilename());
     }
 
-    public function matchRoute(RouteEntity $route): ?array
+    public function matchRoute(RouteInterface $route): ?array
     {
         return $this->matchRouteEx(
             $route->getMethod(),

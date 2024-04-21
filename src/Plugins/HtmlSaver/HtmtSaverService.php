@@ -4,11 +4,12 @@ namespace Bolero\Forms\Plugins\HtmlSaver;
 
 use Bolero\Forms\Components\ChildrenInterface;
 use Bolero\Forms\IO\Utils;
+use DateTime;
 
 class HtmlSaverService implements HtmlSaveServiceInterface
 {
 
-    public function __construct(private ChildrenInterface $children)
+    public function __construct(private readonly ChildrenInterface $children)
     {
     }
 
@@ -26,7 +27,7 @@ class HtmlSaverService implements HtmlSaveServiceInterface
 
     public function markAsPending(): void
     {
-        $date = new \DateTime();
+        $date = new DateTime();
         $timestamp = $date->getTimestamp();
         $pendingTxt = CACHE_DIR . $this->children->getName() . '.pending' . TXT_EXTENSION;
         Utils::safeWrite($pendingTxt, "const time = $timestamp");

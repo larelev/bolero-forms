@@ -6,7 +6,7 @@ use Bolero\Forms\IO\Utils;
 
 class ManifestReader
 {
-    public function __construct(private string $motherUID, private string $name)
+    public function __construct(private readonly string $motherUID, private readonly string $name)
     {
     }
 

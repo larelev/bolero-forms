@@ -4,7 +4,7 @@ namespace Bolero\Forms\Registry;
 
 class ComponentRegistry extends AbstractStaticRegistry
 {
-    private static $instance = null;
+    private static ?AbstractRegistryInterface $instance = null;
 
     public static function reset(): void
     {

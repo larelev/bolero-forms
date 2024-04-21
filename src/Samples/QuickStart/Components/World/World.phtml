@@ -4,7 +4,8 @@ namespace Appliance;
 
 use function Bolero\Forms\Hooks\useEffect;
 
-function World($props) {
+function World($props): string
+{
 
     useEffect(function($props, /* string */ $name, /* string */ $lname) {
         $name = $props->name;

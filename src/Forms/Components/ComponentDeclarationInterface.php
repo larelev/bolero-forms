@@ -2,7 +2,6 @@
 
 namespace Bolero\Forms\Components;
 
-use Bolero\Forms\Element;
 use Bolero\Forms\ElementInterface;
 
 interface ComponentDeclarationInterface extends ElementInterface

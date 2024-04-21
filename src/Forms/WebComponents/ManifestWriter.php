@@ -7,10 +7,13 @@ use Exception;
 
 class ManifestWriter
 {
-    public function __construct(private ManifestStructure $struct, private string $directory)
+    public function __construct(private readonly ManifestStructure $struct, private readonly string $directory)
     {
     }
 
+    /**
+     * @throws Exception
+     */
     public function write(): void
     {
         $destDir = $this->directory;

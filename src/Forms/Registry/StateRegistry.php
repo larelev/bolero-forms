@@ -11,20 +11,20 @@ use Bolero\Forms\StaticElement;
  */
 class StateRegistry extends StaticElement
 {
-    private static $_items = [];
+    private static array $_items = [];
 
     /**
      * @param mixed $item Name of the key
      * @param array $params May one key/value pair or an array of pairs
      * @return void
      */
-    public static function write($item, ...$params): void
+    public static function write(mixed $item, ...$params): void
     {
         if (!isset(self::$_items[$item])) {
             self::$_items[$item] = [];
         }
 
-        if (is_array($params) && count($params) === 1) {
+        if (count($params) === 1) {
             $param0 = $params[0];
             if (is_object($param0)) {
                 $param0 = json_encode($param0);
@@ -155,7 +155,7 @@ class StateRegistry extends StaticElement
         }
 
         if (is_array($section)) {
-            $value = isset($section[$key]) ? $section[$key] : $value;
+            $value = $section[$key] ?? $value;
         }
 
         return $value;
