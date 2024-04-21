@@ -21,7 +21,11 @@ final class ClosedComponentsParser extends AbstractTokenParser
         $comp = $this->component;
         $decl = $comp->getDeclaration();
         $cmpz = $decl->getComposition();
-        $parent = $parameter;
+        $parent = null;
+        $child = null;
+        if($parameter != null) {
+            [$parent, $child] = $parameter;
+        }
         $muid = $comp->getMotherUID();
 
         if ($cmpz === null) {
@@ -70,7 +74,7 @@ final class ClosedComponentsParser extends AbstractTokenParser
 
             $subject = str_replace($component, $componentRender, $subject);
 
-            if($parent !== null && $parent->getName() == 'Route' && $item->getName() != 'Route') {
+            if($parent !== null && $parent->getName() == 'Route') {
 
                 $filename = $muid . DIRECTORY_SEPARATOR . ComponentRegistry::read($funcName);
 
@@ -99,13 +103,13 @@ final class ClosedComponentsParser extends AbstractTokenParser
             Utils::safeWrite(CACHE_DIR . $this->component->getMotherUID() . DIRECTORY_SEPARATOR . $filename, $subject);
         };
 
-        if (!$cmpz->hasChildren()) {
+        if($child != null) {
+            $closure($child, 0);
+        } else if (!$cmpz->hasChildren()) {
             $closure($cmpz, 0);
-        }
-        if ($cmpz->hasChildren()) {
+        } else if ($cmpz->hasChildren()) {
             $cmpz->forEach($closure, $cmpz);
         }
-
 
         $this->html = $subject;
     }

@@ -27,13 +27,14 @@ final class OpenComponentsParser extends AbstractTokenParser
 
         $subject = $this->html;
 
+        $previous = null;
         $parent = null;
-        $closure = function (ComponentEntityInterface $item, int $index) use ($comp, &$subject, &$result, &$parent) {
+        $closure = function (ComponentEntityInterface $item, int $index) use ($comp, &$subject, &$result, &$previous, &$parent) {
+            $parent = $previous != null && $previous->getDepth() < $item->getDepth() ? $previous : null;
 
             if (!$item->hasCloser()) {
                 $p = new ClosedComponentsParser($comp);
-                $p->do($parent);
-                $html = $p->getHtml();
+                $p->do([$parent, $item]);
 
                 return;
             }
@@ -59,11 +60,6 @@ final class OpenComponentsParser extends AbstractTokenParser
             if ($componentName == 'Slot') {
                 return;
             }
-//
-//            if($componentName == 'Route') {
-//                $logger = new Logger();
-//                $logger->dump("Route", $item);
-//            }
 
             $motherUID = $this->component->getMotherUID();
             $decl = $this->component->getDeclaration();
@@ -85,8 +81,6 @@ final class OpenComponentsParser extends AbstractTokenParser
             if ($filename === null) {
                 $filename = WebComponentRegistry::read($fqComponentName);
                 if ($filename !== null) {
-
-                    // $uid = WebComponentRegistry::read($filename);
                     $reader = new ManifestReader($motherUID, $componentName);
                     $manifest = $reader->read();
                     $tag = $manifest->getTag();
@@ -124,7 +118,8 @@ final class OpenComponentsParser extends AbstractTokenParser
 
             $this->result[] = $componentName;
 
-            $parent = $item;
+            $previous = $item;
+
         };
 
         $closure($cmpz, 0);
