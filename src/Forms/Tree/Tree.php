@@ -84,17 +84,6 @@ class Tree implements TreeInterface
         $this->elementList = [];
     }
 
-    public function forEachRecursive(callable $callback, TreeInterface $tree): void
-    {
-        foreach ($tree as $key => $item) {
-            if ($item->hasChildren()) {
-                $this->forEach($callback, $item, $key);
-            }
-
-            call_user_func($callback, $item, $key);
-        }
-    }
-
     public function hasChildren(): bool
     {
         return $this->count() > 0;
@@ -105,14 +94,27 @@ class Tree implements TreeInterface
         return count($this->elementList);
     }
 
-    public function forEach(callable $callback, TreeInterface $tree): void
+    public function forEach(callable $callback, TreeInterface $tree, \Closure|null $breakOn = null): void
     {
         foreach ($tree as $key => $item) {
             call_user_func($callback, $item, $key);
-
-            if ($item->hasChildren()) {
-                $this->forEach($callback, $item, $key);
+            if($breakOn != null && $breakOn()) {
+                break;
             }
+            if ($item->hasChildren()) {
+                $this->forEach($callback, $item, $breakOn);
+            }
+        }
+    }
+
+    public function forEachRecursive(callable $callback, TreeInterface $tree, \Closure|null $breakOn = null): void
+    {
+        foreach ($tree as $key => $item) {
+            if ($item->hasChildren()) {
+                $this->forEach($callback, $item, $breakOn);
+            }
+
+            call_user_func($callback, $item, $key);
         }
     }
 }
