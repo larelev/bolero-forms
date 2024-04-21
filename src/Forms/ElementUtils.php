@@ -28,11 +28,21 @@ final class ElementUtils
 
     public static function getFunctionDefinition($contents): ?array
     {
-        [$namespace, $pos] = self::grabKeywordName('namespace', $contents, ';');
-        [$functionName, $pos] = self::grabKeywordName("\nfunction", $contents, '(');
-        $pos = strpos($contents, '{', $pos);
 
-        return [$namespace, $functionName, $pos];
+        $re = '/namespace *?([\w\\\\]+);[\w\W\\\\]*function *?([$\w]+)\(([\w\W]*)\)\W*:? *?(\w+)?\W*(\{)/U';
+        
+        preg_match($re, $contents, $matches, PREG_OFFSET_CAPTURE, 0);
+
+        if(!count($matches)) {
+            return [null, null, null, null, null];
+        }
+        $namespace = $matches[1][0];
+        $functionName = $matches[2][0];
+        $parameters = $matches[3][0];
+        $returnedType = $matches[4][0];
+        $pos = $matches[5][1];
+
+        return [$namespace, $functionName, $parameters, $returnedType, $pos];
     }
 
     public static function grabKeywordName(string $keyword, string $classText, string $delimiter): array

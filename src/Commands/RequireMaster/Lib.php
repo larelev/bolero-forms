@@ -6,12 +6,13 @@ use Bolero\Forms\CLI\Console;
 use Bolero\Forms\Commands\AbstractCommandLib;
 use Bolero\Forms\IO\Utils;
 use Bolero\Forms\Web\Curl;
+use Exception;
 
 class Lib extends AbstractCommandLib
 {
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function requireMaster(): object
     {

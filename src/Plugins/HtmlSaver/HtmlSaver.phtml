@@ -4,7 +4,7 @@ namespace Bolero\Forms\Plugins\HtmlSaver;
 
 use function Bolero\Forms\Hooks\useEffect;
 
-function HtmlSaver($children)
+function HtmlSaver($children): string
 {
     useEffect(function($children, $service) {
         $service = new HtmlSaverService($children);

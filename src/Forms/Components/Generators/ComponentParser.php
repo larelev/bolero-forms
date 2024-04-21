@@ -252,7 +252,7 @@ class ComponentParser extends Parser implements ParserInterface
     private function doFunctionArguments(string $arguments): ?array
     {
         $result = [];
-        $re = '/([\,]?[\.]?\$[\w]+)/';
+        $re = '/([,]?[.]?\$[\w]+)/';
 
         $str = $arguments;
 

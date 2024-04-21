@@ -16,7 +16,7 @@ class Plugin extends AbstractFileComponent implements FileComponentInterface
 
         $this->code = Utils::safeRead(PLUGINS_ROOT . $this->filename);
 
-        [$this->namespace, $this->function, $this->bodyStartsAt] = ElementUtils::getFunctionDefinition($this->code);
+        [$this->namespace, $this->function, $parameters, $returnType, $this->bodyStartsAt] = ElementUtils::getFunctionDefinition($this->code);
         return $this->code !== null;
     }
 

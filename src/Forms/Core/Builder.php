@@ -21,6 +21,7 @@ use Bolero\Forms\Registry\PluginRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 use Bolero\Forms\Web\Curl;
 use DateTime;
+use Exception;
 use Throwable;
 
 class Builder
@@ -299,7 +300,7 @@ class Builder
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function buildByRoute($route = 'Default'): void
     {

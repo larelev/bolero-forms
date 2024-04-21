@@ -3,7 +3,7 @@ namespace Bolero\Forms\Plugins;
 
 use function Bolero\Forms\Hooks\useEffect;
 
-function ResponseHeader($props)
+function ResponseHeader($props): string
 {
     useEffect(function () use ($props, /* bool */ &$hasDirectives, /* string */ &$directives) {
         $directives = $props->directive;

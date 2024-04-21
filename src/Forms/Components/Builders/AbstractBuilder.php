@@ -4,6 +4,7 @@ namespace Bolero\Forms\Components\Builders;
 
 use Bolero\Forms\Components\Validators\PropsValidator;
 use Bolero\Forms\ElementInterface;
+use ErrorException;
 
 abstract class AbstractBuilder
 {
@@ -17,11 +18,10 @@ abstract class AbstractBuilder
     }
 
     /**
-     * @throws \ErrorException
+     * @throws ErrorException
      */
     protected function buildEx(string $class): ElementInterface
     {
-
         $struct = (new PropsValidator($this->props, $this->struct))->validate();
 
         return new $class($struct);

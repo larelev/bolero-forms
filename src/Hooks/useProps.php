@@ -3,6 +3,7 @@
 namespace Bolero\Forms\Hooks;
 
 use Closure;
+use ReflectionException;
 use ReflectionFunction;
 use stdClass;
 
@@ -13,7 +14,7 @@ use stdClass;
  * @param Closure $callback
  * @param object|null $props
  * @return void
- * @throws \ReflectionException
+ * @throws ReflectionException
  */
 #[Deprecated("Useless function", "useEffect", "0.3")]
 function useProps(Closure $callback, ?object $props = null): void

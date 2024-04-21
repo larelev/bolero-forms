@@ -10,7 +10,7 @@ use Bolero\Forms\Registry\RouteRegistry;
 use function Bolero\Forms\Hooks\useEffect;
 use function Bolero\Forms\Hooks\useState;
 
-function Router($children)
+function Router($children): string
 {
     useEffect(function (/* bool */ $hasRouted, /* object */ $service, /* string */ $path, /* string */ $html) {
 

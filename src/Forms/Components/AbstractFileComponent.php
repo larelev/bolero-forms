@@ -12,6 +12,8 @@ use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\PluginRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 use Bolero\Forms\Web\Request;
+use Exception;
+use ReflectionException;
 
 define('INCLUDE_PLACEHOLDER', "include_once CACHE_DIR . '%s';");
 define('USE_PLACEHOLDER', "use %s;" . PHP_EOL);
@@ -77,7 +79,7 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function render(?array $functionArgs = null, ?Request $request = null): void
     {
@@ -106,7 +108,7 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function parse(): void
     {
@@ -132,6 +134,9 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
         $this->code = $parser->getHtml();
 
         $parser->doUseEffect($this);
+        $this->code = $parser->getHtml();
+
+        $parser->doReturnType($this);
         $this->code = $parser->getHtml();
 
         $parser->doWebComponent($this);
@@ -213,10 +218,10 @@ abstract class AbstractFileComponent extends AbstractComponent implements FileCo
             $this->code = Utils::safeRead(COPY_DIR . $this->filename);
         }
 
-        [$this->namespace, $this->function, $this->bodyStartsAt] = ElementUtils::getFunctionDefinition($this->code);
+        [$this->namespace, $this->function, $parameters, $returnedType, $this->bodyStartsAt] = ElementUtils::getFunctionDefinition($this->code);
         if (!$this->bodyStartsAt) {
             $this->makeComponent($this->filename, $this->code);
-            [$this->namespace, $this->function, $this->bodyStartsAt] = ElementUtils::getFunctionDefinition($this->code);
+            [$this->namespace, $this->function, $parameters, $returnedType, $this->bodyStartsAt] = ElementUtils::getFunctionDefinition($this->code);
         }
         return $this->code !== null;
     }

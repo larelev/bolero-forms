@@ -3,6 +3,7 @@
 namespace Bolero\Forms;
 
 use ReflectionClass;
+use ReflectionException;
 
 class Element extends StaticElement implements ElementInterface
 {
@@ -45,7 +46,7 @@ class Element extends StaticElement implements ElementInterface
     }
 
     /**
-     * @throws \ReflectionException
+     * @throws ReflectionException
      */
     public function getMethodParameters($method): ?array
     {

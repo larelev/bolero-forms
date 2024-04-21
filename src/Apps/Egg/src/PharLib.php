@@ -9,6 +9,7 @@ use Bolero\Forms\Element;
 use Bolero\Forms\IO\Utils;
 use Bolero\Forms\Utils\Zip;
 use Bolero\Forms\Web\Curl;
+use Exception;
 use FilesystemIterator;
 use Phar;
 use Throwable;
@@ -37,7 +38,7 @@ class PharLib extends Element
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
     public function requireMaster(): object
     {
@@ -99,7 +100,7 @@ class PharLib extends Element
                 mkdir($buildRoot);
             }
 
-            $this->phar = new \Phar(
+            $this->phar = new Phar(
                 $buildRoot . $pharName,
                 FilesystemIterator::CURRENT_AS_FILEINFO | FilesystemIterator::KEY_AS_FILENAME,
                 $pharName

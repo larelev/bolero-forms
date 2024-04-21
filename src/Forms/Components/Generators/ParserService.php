@@ -13,6 +13,7 @@ use Bolero\Forms\Components\Generators\TokenParsers\HeredocParser;
 use Bolero\Forms\Components\Generators\TokenParsers\HtmlParser;
 use Bolero\Forms\Components\Generators\TokenParsers\NamespaceParser;
 use Bolero\Forms\Components\Generators\TokenParsers\OpenComponentsParser;
+use Bolero\Forms\Components\Generators\TokenParsers\ReturnTypeParser;
 use Bolero\Forms\Components\Generators\TokenParsers\UseEffectParser;
 use Bolero\Forms\Components\Generators\TokenParsers\UsesAsParser;
 use Bolero\Forms\Components\Generators\TokenParsers\UsesParser;
@@ -73,6 +74,13 @@ class ParserService implements ParserServiceInterface
         $p = new UsesAsParser($component);
         $p->do();
         $this->useTypes = array_merge($this->useTypes, $p->getUses());
+    }
+
+    public function doReturnType(FileComponentInterface $component): void
+    {
+        $p = new ReturnTypeParser($component);
+        $p->do();
+        $this->html = $p->getHtml();
     }
 
     public function doHeredoc(FileComponentInterface $component): void

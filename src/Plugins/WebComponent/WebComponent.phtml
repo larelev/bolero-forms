@@ -4,7 +4,7 @@ namespace Bolero\Forms\Plugins\WebComponent;
 
 use function Bolero\Forms\Hooks\useEffect;
 
-function WebComponent($children)
+function WebComponent($children): string
 {
 
     useEffect(function ($children, /* string */ $tag, /* string */ $args, /* string */ $body, $service) {
