@@ -175,7 +175,7 @@ class RouterService implements RouterServiceInterface
             $query = $route->query;
             $error = $route->error;
             $responseCode = $route->code;
-            $middlewares = $route->middlewares;
+            $middlewares = $route->middlewares ?? [];
 
             if ($responseCode === 200) {
                 $i = $c;
