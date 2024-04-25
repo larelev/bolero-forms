@@ -19,7 +19,7 @@ class Element extends StaticElement implements ElementInterface
         $this->id = ($id === null) ? '_' . time() : $id;
     }
 
-    public static function getAttributesData(object $instance): array
+    public static function getClassAttributesData(object $instance): array
     {
         $result = [];
         $temp = [];

@@ -10,6 +10,7 @@ use Bolero\Forms\Registry\ComponentRegistry;
 use Bolero\Forms\Registry\RouteRegistry;
 use Bolero\Forms\Registry\WebComponentRegistry;
 use Bolero\Forms\WebComponents\ManifestReader;
+use ReflectionFunction;
 
 final class ClosedComponentsParser extends AbstractTokenParser
 {
@@ -79,18 +80,39 @@ final class ClosedComponentsParser extends AbstractTokenParser
 
                 $route = new RouteEntity( new RouteStructure($parent->props()) );
                 $middlewareHtml = "function() {\n\tinclude_once CACHE_DIR . '$filename';\n\t\$fn = \\{$funcName}($args); \$fn();\n}\n";
+                include_once CACHE_DIR . $filename;
+                $reflection = new ReflectionFunction($funcName);
+                $attrs = $reflection->getAttributes();
+
+                $isMiddleware = false;
+                foreach ($attrs as $attr) {
+                    $isMiddleware = $attr->getName() == \Bolero\Forms\Plugins\Route\Attributes\RouteMiddleware::class;
+                    if ($isMiddleware) {
+                        break;
+                    }
+                }
+                if(!count($attrs) || !$isMiddleware) {
+                    throw new \Exception("$funcName is not a route middleware");
+                }
                 RouteRegistry::uncache();
                 $methodRegistry = RouteRegistry::read($route->getMethod()) ?: [];
 
-                $methodRegistry[$route->getRule()] = [
-                    'rule' => $route->getRule(),
-                    'redirect' => $route->getRedirect(),
-                    'error' => $route->getError(),
-                    'exact' => $route->isExact(),
-                    'middlewares' => [$middlewareHtml,],
-                    'translate' => $route->getRule(),
-                    'normal' => $route->getRule(),
-                ];
+                $existingRoute = $methodRegistry[$route->getRule()];
+                if(!empty($existingRoute)) {
+                    $existingRoute['middlewares'][] = $middlewareHtml;
+                    $methodRegistry[$route->getRule()] = $existingRoute;
+                } else {
+                    $methodRegistry[$route->getRule()] = [
+                        'rule' => $route->getRule(),
+                        'redirect' => $route->getRedirect(),
+                        'error' => $route->getError(),
+                        'exact' => $route->isExact(),
+                        'middlewares' => [$middlewareHtml,],
+                        'translate' => $route->getRule(),
+                        'normal' => $route->getRule(),
+                    ];
+                }
+
                 RouteRegistry::write($route->getMethod(), $methodRegistry);
 
                 RouteRegistry::cache();

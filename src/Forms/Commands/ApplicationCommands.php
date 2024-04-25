@@ -48,7 +48,7 @@ class ApplicationCommands extends Element implements CommandCollectionInterface
                 include $root_dir . $filename;
                 $object = new $fqClass($this->_application);
 
-                $attr = Element::getAttributesData($object);
+                $attr = Element::getClassAttributesData($object);
                 $commandArgs = $attr[0]['args'];
 
                 $verb = $commandArgs['verb'];
